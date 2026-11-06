@@ -31,6 +31,13 @@ namespace margelo::nitro::munimhaptics {
   enum class HapticCurveParameter {
     INTENSITY      SWIFT_NAME(intensity) = 0,
     SHARPNESS      SWIFT_NAME(sharpness) = 1,
+    ATTACKTIME      SWIFT_NAME(attacktime) = 2,
+    DECAYTIME      SWIFT_NAME(decaytime) = 3,
+    RELEASETIME      SWIFT_NAME(releasetime) = 4,
+    AUDIOVOLUME      SWIFT_NAME(audiovolume) = 5,
+    AUDIOPAN      SWIFT_NAME(audiopan) = 6,
+    AUDIOPITCH      SWIFT_NAME(audiopitch) = 7,
+    AUDIOBRIGHTNESS      SWIFT_NAME(audiobrightness) = 8,
   } CLOSED_ENUM;
 
 } // namespace margelo::nitro::munimhaptics
@@ -45,6 +52,13 @@ namespace margelo::nitro {
       switch (hashString(unionValue.c_str(), unionValue.size())) {
         case hashString("intensity"): return margelo::nitro::munimhaptics::HapticCurveParameter::INTENSITY;
         case hashString("sharpness"): return margelo::nitro::munimhaptics::HapticCurveParameter::SHARPNESS;
+        case hashString("attackTime"): return margelo::nitro::munimhaptics::HapticCurveParameter::ATTACKTIME;
+        case hashString("decayTime"): return margelo::nitro::munimhaptics::HapticCurveParameter::DECAYTIME;
+        case hashString("releaseTime"): return margelo::nitro::munimhaptics::HapticCurveParameter::RELEASETIME;
+        case hashString("audioVolume"): return margelo::nitro::munimhaptics::HapticCurveParameter::AUDIOVOLUME;
+        case hashString("audioPan"): return margelo::nitro::munimhaptics::HapticCurveParameter::AUDIOPAN;
+        case hashString("audioPitch"): return margelo::nitro::munimhaptics::HapticCurveParameter::AUDIOPITCH;
+        case hashString("audioBrightness"): return margelo::nitro::munimhaptics::HapticCurveParameter::AUDIOBRIGHTNESS;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum HapticCurveParameter - invalid value!");
       }
@@ -53,6 +67,13 @@ namespace margelo::nitro {
       switch (arg) {
         case margelo::nitro::munimhaptics::HapticCurveParameter::INTENSITY: return JSIConverter<std::string>::toJSI(runtime, "intensity");
         case margelo::nitro::munimhaptics::HapticCurveParameter::SHARPNESS: return JSIConverter<std::string>::toJSI(runtime, "sharpness");
+        case margelo::nitro::munimhaptics::HapticCurveParameter::ATTACKTIME: return JSIConverter<std::string>::toJSI(runtime, "attackTime");
+        case margelo::nitro::munimhaptics::HapticCurveParameter::DECAYTIME: return JSIConverter<std::string>::toJSI(runtime, "decayTime");
+        case margelo::nitro::munimhaptics::HapticCurveParameter::RELEASETIME: return JSIConverter<std::string>::toJSI(runtime, "releaseTime");
+        case margelo::nitro::munimhaptics::HapticCurveParameter::AUDIOVOLUME: return JSIConverter<std::string>::toJSI(runtime, "audioVolume");
+        case margelo::nitro::munimhaptics::HapticCurveParameter::AUDIOPAN: return JSIConverter<std::string>::toJSI(runtime, "audioPan");
+        case margelo::nitro::munimhaptics::HapticCurveParameter::AUDIOPITCH: return JSIConverter<std::string>::toJSI(runtime, "audioPitch");
+        case margelo::nitro::munimhaptics::HapticCurveParameter::AUDIOBRIGHTNESS: return JSIConverter<std::string>::toJSI(runtime, "audioBrightness");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert HapticCurveParameter to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");
@@ -66,6 +87,13 @@ namespace margelo::nitro {
       switch (hashString(unionValue.c_str(), unionValue.size())) {
         case hashString("intensity"):
         case hashString("sharpness"):
+        case hashString("attackTime"):
+        case hashString("decayTime"):
+        case hashString("releaseTime"):
+        case hashString("audioVolume"):
+        case hashString("audioPan"):
+        case hashString("audioPitch"):
+        case hashString("audioBrightness"):
           return true;
         default:
           return false;

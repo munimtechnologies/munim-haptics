@@ -7,6 +7,22 @@
 
 #include "JHybridMunimHapticsSpec.hpp"
 
+// Forward declaration of `HapticCapabilities` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticCapabilities; }
+// Forward declaration of `AndroidPrimitiveInfo` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct AndroidPrimitiveInfo; }
+// Forward declaration of `AndroidPrimitive` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPrimitive; }
+// Forward declaration of `AndroidEffectInfo` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct AndroidEffectInfo; }
+// Forward declaration of `AndroidPredefinedEffect` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPredefinedEffect; }
+// Forward declaration of `AndroidEffectSupport` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidEffectSupport; }
+// Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
+// Forward declaration of `HapticEngineState` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineState; }
 // Forward declaration of `NativeHapticPattern` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct NativeHapticPattern; }
 // Forward declaration of `NativeHapticEvent` to properly resolve imports.
@@ -19,14 +35,61 @@ namespace margelo::nitro::munimhaptics { struct HapticCurve; }
 namespace margelo::nitro::munimhaptics { enum class HapticCurveParameter; }
 // Forward declaration of `HapticCurvePoint` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticCurvePoint; }
+// Forward declaration of `ImpactStyle` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class ImpactStyle; }
+// Forward declaration of `NotificationFeedbackType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class NotificationFeedbackType; }
+// Forward declaration of `HapticEngineOptions` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineOptions; }
+// Forward declaration of `HapticEngineEvent` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineEvent; }
+// Forward declaration of `HapticEngineEventType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class HapticEngineEventType; }
+// Forward declaration of `HapticEngineStopReason` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class HapticEngineStopReason; }
+// Forward declaration of `NativeVibrationOptions` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeVibrationOptions; }
+// Forward declaration of `AndroidVibrationUsage` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidVibrationUsage; }
+// Forward declaration of `NativePrimitiveStep` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativePrimitiveStep; }
+// Forward declaration of `AndroidPrimitiveDelayType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPrimitiveDelayType; }
+// Forward declaration of `NativeHapticEnvelope` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeHapticEnvelope; }
+// Forward declaration of `AndroidEnvelopeKind` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidEnvelopeKind; }
+// Forward declaration of `NativeEnvelopePoint` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeEnvelopePoint; }
+// Forward declaration of `AndroidHapticFeedback` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidHapticFeedback; }
 
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/JPromise.hpp>
 #include <NitroModules/JUnit.hpp>
+#include "HapticCapabilities.hpp"
+#include "JHapticCapabilities.hpp"
+#include <string>
+#include "AndroidPrimitiveInfo.hpp"
+#include <vector>
+#include "JAndroidPrimitiveInfo.hpp"
+#include "AndroidPrimitive.hpp"
+#include "JAndroidPrimitive.hpp"
+#include "AndroidEffectInfo.hpp"
+#include "JAndroidEffectInfo.hpp"
+#include "AndroidPredefinedEffect.hpp"
+#include "JAndroidPredefinedEffect.hpp"
+#include "AndroidEffectSupport.hpp"
+#include "JAndroidEffectSupport.hpp"
+#include <optional>
+#include <memory>
+#include "HybridHapticPlayerSpec.hpp"
+#include "JHybridHapticPlayerSpec.hpp"
+#include "HapticEngineState.hpp"
+#include "JHapticEngineState.hpp"
 #include "NativeHapticPattern.hpp"
 #include "JNativeHapticPattern.hpp"
 #include "NativeHapticEvent.hpp"
-#include <vector>
 #include "JNativeHapticEvent.hpp"
 #include "HapticEventType.hpp"
 #include "JHapticEventType.hpp"
@@ -36,6 +99,37 @@ namespace margelo::nitro::munimhaptics { struct HapticCurvePoint; }
 #include "JHapticCurveParameter.hpp"
 #include "HapticCurvePoint.hpp"
 #include "JHapticCurvePoint.hpp"
+#include "ImpactStyle.hpp"
+#include "JImpactStyle.hpp"
+#include "NotificationFeedbackType.hpp"
+#include "JNotificationFeedbackType.hpp"
+#include "HapticEngineOptions.hpp"
+#include "JHapticEngineOptions.hpp"
+#include "HapticEngineEvent.hpp"
+#include <functional>
+#include "JFunc_void_HapticEngineEvent.hpp"
+#include <NitroModules/JNICallable.hpp>
+#include "JHapticEngineEvent.hpp"
+#include "HapticEngineEventType.hpp"
+#include "JHapticEngineEventType.hpp"
+#include "HapticEngineStopReason.hpp"
+#include "JHapticEngineStopReason.hpp"
+#include "NativeVibrationOptions.hpp"
+#include "JNativeVibrationOptions.hpp"
+#include "AndroidVibrationUsage.hpp"
+#include "JAndroidVibrationUsage.hpp"
+#include "NativePrimitiveStep.hpp"
+#include "JNativePrimitiveStep.hpp"
+#include "AndroidPrimitiveDelayType.hpp"
+#include "JAndroidPrimitiveDelayType.hpp"
+#include "NativeHapticEnvelope.hpp"
+#include "JNativeHapticEnvelope.hpp"
+#include "AndroidEnvelopeKind.hpp"
+#include "JAndroidEnvelopeKind.hpp"
+#include "NativeEnvelopePoint.hpp"
+#include "JNativeEnvelopePoint.hpp"
+#include "AndroidHapticFeedback.hpp"
+#include "JAndroidHapticFeedback.hpp"
 
 namespace margelo::nitro::munimhaptics {
 
@@ -107,6 +201,327 @@ namespace margelo::nitro::munimhaptics {
   }
   std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::stop() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("stop");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  HapticCapabilities JHybridMunimHapticsSpec::getCapabilities() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JHapticCapabilities>()>("getCapabilities");
+    auto __result = method(_javaPart);
+    return __result->toCpp();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::impact(ImpactStyle style, double intensity) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JImpactStyle> /* style */, double /* intensity */)>("impact");
+    auto __result = method(_javaPart, JImpactStyle::fromCpp(style), intensity);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::notification(NotificationFeedbackType type) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JNotificationFeedbackType> /* type */)>("notification");
+    auto __result = method(_javaPart, JNotificationFeedbackType::fromCpp(type));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::selection() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("selection");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::prepareImpact(ImpactStyle style) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JImpactStyle> /* style */)>("prepareImpact");
+    auto __result = method(_javaPart, JImpactStyle::fromCpp(style));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::prepareNotification() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("prepareNotification");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::prepareSelection() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("prepareSelection");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::playAHAP(const std::string& ahap) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* ahap */)>("playAHAP");
+    auto __result = method(_javaPart, jni::make_jstring(ahap));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::playAHAPFile(const std::string& path) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* path */)>("playAHAPFile");
+    auto __result = method(_javaPart, jni::make_jstring(path));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<std::string>> JHybridMunimHapticsSpec::readTextFile(const std::string& path) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* path */)>("readTextFile");
+    auto __result = method(_javaPart, jni::make_jstring(path));
+    return [&]() {
+      auto __promise = Promise<std::string>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JString>(__boxedResult);
+        __promise->resolve(__result->toStdString());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<HybridHapticPlayerSpec> JHybridMunimHapticsSpec::createPlayer(const NativeHapticPattern& pattern) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JHybridHapticPlayerSpec::JavaPart>(jni::alias_ref<JNativeHapticPattern> /* pattern */)>("createPlayer");
+    auto __result = method(_javaPart, JNativeHapticPattern::fromCpp(pattern));
+    return __result->getJHybridHapticPlayerSpec();
+  }
+  std::shared_ptr<HybridHapticPlayerSpec> JHybridMunimHapticsSpec::createPlayerFromAHAP(const std::string& ahap) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JHybridHapticPlayerSpec::JavaPart>(jni::alias_ref<jni::JString> /* ahap */)>("createPlayerFromAHAP");
+    auto __result = method(_javaPart, jni::make_jstring(ahap));
+    return __result->getJHybridHapticPlayerSpec();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::startEngine() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("startEngine");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::stopEngine() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("stopEngine");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridMunimHapticsSpec::setEngineOptions(const HapticEngineOptions& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JHapticEngineOptions> /* options */)>("setEngineOptions");
+    method(_javaPart, JHapticEngineOptions::fromCpp(options));
+  }
+  HapticEngineState JHybridMunimHapticsSpec::getEngineState() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JHapticEngineState>()>("getEngineState");
+    auto __result = method(_javaPart);
+    return __result->toCpp();
+  }
+  void JHybridMunimHapticsSpec::setEngineListener(const std::function<void(const HapticEngineEvent& /* event */)>& listener) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_HapticEngineEvent::javaobject> /* listener */)>("setEngineListener_cxx");
+    method(_javaPart, JFunc_void_HapticEngineEvent_cxx::fromCpp(listener));
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::vibrate(double durationMs, double amplitude, const NativeVibrationOptions& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(double /* durationMs */, double /* amplitude */, jni::alias_ref<JNativeVibrationOptions> /* options */)>("vibrate");
+    auto __result = method(_javaPart, durationMs, amplitude, JNativeVibrationOptions::fromCpp(options));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::playWaveform(const std::vector<double>& timingsMs, const std::vector<double>& amplitudes, double repeatIndex, const NativeVibrationOptions& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JArrayDouble> /* timingsMs */, jni::alias_ref<jni::JArrayDouble> /* amplitudes */, double /* repeatIndex */, jni::alias_ref<JNativeVibrationOptions> /* options */)>("playWaveform");
+    auto __result = method(_javaPart, [&]() {
+      size_t __size = timingsMs.size();
+      jni::local_ref<jni::JArrayDouble> __array = jni::JArrayDouble::newArray(__size);
+      __array->setRegion(0, __size, timingsMs.data());
+      return __array;
+    }(), [&]() {
+      size_t __size = amplitudes.size();
+      jni::local_ref<jni::JArrayDouble> __array = jni::JArrayDouble::newArray(__size);
+      __array->setRegion(0, __size, amplitudes.data());
+      return __array;
+    }(), repeatIndex, JNativeVibrationOptions::fromCpp(options));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<bool>> JHybridMunimHapticsSpec::playPredefined(AndroidPredefinedEffect effect, bool fallback, const NativeVibrationOptions& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JAndroidPredefinedEffect> /* effect */, jboolean /* fallback */, jni::alias_ref<JNativeVibrationOptions> /* options */)>("playPredefined");
+    auto __result = method(_javaPart, JAndroidPredefinedEffect::fromCpp(effect), fallback, JNativeVibrationOptions::fromCpp(options));
+    return [&]() {
+      auto __promise = Promise<bool>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JBoolean>(__boxedResult);
+        __promise->resolve(static_cast<bool>(__result->value()));
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<bool>> JHybridMunimHapticsSpec::playPrimitives(const std::vector<NativePrimitiveStep>& steps, bool fallback, const NativeVibrationOptions& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JArrayClass<JNativePrimitiveStep>> /* steps */, jboolean /* fallback */, jni::alias_ref<JNativeVibrationOptions> /* options */)>("playPrimitives");
+    auto __result = method(_javaPart, [&](auto&& __input) {
+      size_t __size = __input.size();
+      jni::local_ref<jni::JArrayClass<JNativePrimitiveStep>> __array = jni::JArrayClass<JNativePrimitiveStep>::newArray(__size);
+      for (size_t __i = 0; __i < __size; __i++) {
+        const auto& __element = __input[__i];
+        auto __elementJni = JNativePrimitiveStep::fromCpp(__element);
+        __array->setElement(__i, *__elementJni);
+      }
+      return __array;
+    }(steps), fallback, JNativeVibrationOptions::fromCpp(options));
+    return [&]() {
+      auto __promise = Promise<bool>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JBoolean>(__boxedResult);
+        __promise->resolve(static_cast<bool>(__result->value()));
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::playEnvelope(const NativeHapticEnvelope& envelope, const NativeVibrationOptions& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JNativeHapticEnvelope> /* envelope */, jni::alias_ref<JNativeVibrationOptions> /* options */)>("playEnvelope");
+    auto __result = method(_javaPart, JNativeHapticEnvelope::fromCpp(envelope), JNativeVibrationOptions::fromCpp(options));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<bool>> JHybridMunimHapticsSpec::performHapticFeedback(AndroidHapticFeedback feedback, bool fallback) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JAndroidHapticFeedback> /* feedback */, jboolean /* fallback */)>("performHapticFeedback");
+    auto __result = method(_javaPart, JAndroidHapticFeedback::fromCpp(feedback), fallback);
+    return [&]() {
+      auto __promise = Promise<bool>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JBoolean>(__boxedResult);
+        __promise->resolve(static_cast<bool>(__result->value()));
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::cancel() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("cancel");
     auto __result = method(_javaPart);
     return [&]() {
       auto __promise = Promise<void>::create();

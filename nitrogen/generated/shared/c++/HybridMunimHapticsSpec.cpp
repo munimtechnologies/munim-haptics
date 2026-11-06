@@ -18,6 +18,30 @@ namespace margelo::nitro::munimhaptics {
       prototype.registerHybridMethod("prepare", &HybridMunimHapticsSpec::prepare);
       prototype.registerHybridMethod("playPattern", &HybridMunimHapticsSpec::playPattern);
       prototype.registerHybridMethod("stop", &HybridMunimHapticsSpec::stop);
+      prototype.registerHybridMethod("getCapabilities", &HybridMunimHapticsSpec::getCapabilities);
+      prototype.registerHybridMethod("impact", &HybridMunimHapticsSpec::impact);
+      prototype.registerHybridMethod("notification", &HybridMunimHapticsSpec::notification);
+      prototype.registerHybridMethod("selection", &HybridMunimHapticsSpec::selection);
+      prototype.registerHybridMethod("prepareImpact", &HybridMunimHapticsSpec::prepareImpact);
+      prototype.registerHybridMethod("prepareNotification", &HybridMunimHapticsSpec::prepareNotification);
+      prototype.registerHybridMethod("prepareSelection", &HybridMunimHapticsSpec::prepareSelection);
+      prototype.registerHybridMethod("playAHAP", &HybridMunimHapticsSpec::playAHAP);
+      prototype.registerHybridMethod("playAHAPFile", &HybridMunimHapticsSpec::playAHAPFile);
+      prototype.registerHybridMethod("readTextFile", &HybridMunimHapticsSpec::readTextFile);
+      prototype.registerHybridMethod("createPlayer", &HybridMunimHapticsSpec::createPlayer);
+      prototype.registerHybridMethod("createPlayerFromAHAP", &HybridMunimHapticsSpec::createPlayerFromAHAP);
+      prototype.registerHybridMethod("startEngine", &HybridMunimHapticsSpec::startEngine);
+      prototype.registerHybridMethod("stopEngine", &HybridMunimHapticsSpec::stopEngine);
+      prototype.registerHybridMethod("setEngineOptions", &HybridMunimHapticsSpec::setEngineOptions);
+      prototype.registerHybridMethod("getEngineState", &HybridMunimHapticsSpec::getEngineState);
+      prototype.registerHybridMethod("setEngineListener", &HybridMunimHapticsSpec::setEngineListener);
+      prototype.registerHybridMethod("vibrate", &HybridMunimHapticsSpec::vibrate);
+      prototype.registerHybridMethod("playWaveform", &HybridMunimHapticsSpec::playWaveform);
+      prototype.registerHybridMethod("playPredefined", &HybridMunimHapticsSpec::playPredefined);
+      prototype.registerHybridMethod("playPrimitives", &HybridMunimHapticsSpec::playPrimitives);
+      prototype.registerHybridMethod("playEnvelope", &HybridMunimHapticsSpec::playEnvelope);
+      prototype.registerHybridMethod("performHapticFeedback", &HybridMunimHapticsSpec::performHapticFeedback);
+      prototype.registerHybridMethod("cancel", &HybridMunimHapticsSpec::cancel);
     });
   }
 

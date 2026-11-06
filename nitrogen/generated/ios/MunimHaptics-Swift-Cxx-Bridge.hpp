@@ -8,36 +8,88 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `AndroidEffectInfo` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct AndroidEffectInfo; }
+// Forward declaration of `AndroidEffectSupport` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidEffectSupport; }
+// Forward declaration of `AndroidPredefinedEffect` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPredefinedEffect; }
+// Forward declaration of `AndroidPrimitiveDelayType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPrimitiveDelayType; }
+// Forward declaration of `AndroidPrimitiveInfo` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct AndroidPrimitiveInfo; }
+// Forward declaration of `AndroidPrimitive` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPrimitive; }
+// Forward declaration of `HapticCapabilities` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticCapabilities; }
 // Forward declaration of `HapticCurveParameter` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { enum class HapticCurveParameter; }
 // Forward declaration of `HapticCurvePoint` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticCurvePoint; }
 // Forward declaration of `HapticCurve` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticCurve; }
+// Forward declaration of `HapticDynamicParameter` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticDynamicParameter; }
+// Forward declaration of `HapticEngineEventType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class HapticEngineEventType; }
+// Forward declaration of `HapticEngineEvent` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineEvent; }
+// Forward declaration of `HapticEngineState` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineState; }
+// Forward declaration of `HapticEngineStopReason` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class HapticEngineStopReason; }
 // Forward declaration of `HapticEventType` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { enum class HapticEventType; }
+// Forward declaration of `HapticPlayerCompletion` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticPlayerCompletion; }
+// Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
 // Forward declaration of `HybridMunimHapticsSpec` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { class HybridMunimHapticsSpec; }
+// Forward declaration of `NativeEnvelopePoint` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeEnvelopePoint; }
 // Forward declaration of `NativeHapticEvent` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct NativeHapticEvent; }
+// Forward declaration of `NativePrimitiveStep` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativePrimitiveStep; }
 
 // Forward declarations of Swift defined types
+// Forward declaration of `HybridHapticPlayerSpec_cxx` to properly resolve imports.
+namespace MunimHaptics { class HybridHapticPlayerSpec_cxx; }
 // Forward declaration of `HybridMunimHapticsSpec_cxx` to properly resolve imports.
 namespace MunimHaptics { class HybridMunimHapticsSpec_cxx; }
 
 // Include C++ defined types
+#include "AndroidEffectInfo.hpp"
+#include "AndroidEffectSupport.hpp"
+#include "AndroidPredefinedEffect.hpp"
+#include "AndroidPrimitive.hpp"
+#include "AndroidPrimitiveDelayType.hpp"
+#include "AndroidPrimitiveInfo.hpp"
+#include "HapticCapabilities.hpp"
 #include "HapticCurve.hpp"
 #include "HapticCurveParameter.hpp"
 #include "HapticCurvePoint.hpp"
+#include "HapticDynamicParameter.hpp"
+#include "HapticEngineEvent.hpp"
+#include "HapticEngineEventType.hpp"
+#include "HapticEngineState.hpp"
+#include "HapticEngineStopReason.hpp"
 #include "HapticEventType.hpp"
+#include "HapticPlayerCompletion.hpp"
+#include "HybridHapticPlayerSpec.hpp"
 #include "HybridMunimHapticsSpec.hpp"
+#include "NativeEnvelopePoint.hpp"
 #include "NativeHapticEvent.hpp"
+#include "NativePrimitiveStep.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
 #include <functional>
 #include <memory>
+#include <optional>
+#include <string>
 #include <vector>
 
 /**
@@ -102,13 +154,13 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
     return Func_void_std__exception_ptr_Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::vector<NativeHapticEvent>
+  // pragma MARK: std::vector<HapticDynamicParameter>
   /**
-   * Specialized version of `std::vector<NativeHapticEvent>`.
+   * Specialized version of `std::vector<HapticDynamicParameter>`.
    */
-  using std__vector_NativeHapticEvent_ = std::vector<NativeHapticEvent>;
-  inline std::vector<NativeHapticEvent> create_std__vector_NativeHapticEvent_(size_t size) noexcept {
-    std::vector<NativeHapticEvent> vector;
+  using std__vector_HapticDynamicParameter_ = std::vector<HapticDynamicParameter>;
+  inline std::vector<HapticDynamicParameter> create_std__vector_HapticDynamicParameter_(size_t size) noexcept {
+    std::vector<HapticDynamicParameter> vector;
     vector.reserve(size);
     return vector;
   }
@@ -124,6 +176,114 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
     return vector;
   }
   
+  // pragma MARK: std::function<void(const HapticPlayerCompletion& /* completion */)>
+  /**
+   * Specialized version of `std::function<void(const HapticPlayerCompletion&)>`.
+   */
+  using Func_void_HapticPlayerCompletion = std::function<void(const HapticPlayerCompletion& /* completion */)>;
+  /**
+   * Wrapper class for a `std::function<void(const HapticPlayerCompletion& / * completion * /)>`, this can be used from Swift.
+   */
+  class Func_void_HapticPlayerCompletion_Wrapper final {
+  public:
+    explicit Func_void_HapticPlayerCompletion_Wrapper(std::function<void(const HapticPlayerCompletion& /* completion */)>&& func): _function(std::make_unique<std::function<void(const HapticPlayerCompletion& /* completion */)>>(std::move(func))) {}
+    inline void call(HapticPlayerCompletion completion) const noexcept {
+      _function->operator()(completion);
+    }
+  private:
+    std::unique_ptr<std::function<void(const HapticPlayerCompletion& /* completion */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_HapticPlayerCompletion create_Func_void_HapticPlayerCompletion(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_HapticPlayerCompletion_Wrapper wrap_Func_void_HapticPlayerCompletion(Func_void_HapticPlayerCompletion value) noexcept {
+    return Func_void_HapticPlayerCompletion_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridHapticPlayerSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridHapticPlayerSpec>`.
+   */
+  using std__shared_ptr_HybridHapticPlayerSpec_ = std::shared_ptr<HybridHapticPlayerSpec>;
+  std::shared_ptr<HybridHapticPlayerSpec> create_std__shared_ptr_HybridHapticPlayerSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridHapticPlayerSpec_(std__shared_ptr_HybridHapticPlayerSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridHapticPlayerSpec>
+  using std__weak_ptr_HybridHapticPlayerSpec_ = std::weak_ptr<HybridHapticPlayerSpec>;
+  inline std__weak_ptr_HybridHapticPlayerSpec_ weakify_std__shared_ptr_HybridHapticPlayerSpec_(const std::shared_ptr<HybridHapticPlayerSpec>& strong) noexcept { return strong; }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<void>>>
+  using Result_std__shared_ptr_Promise_void___ = Result<std::shared_ptr<Promise<void>>>;
+  inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::shared_ptr<Promise<void>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<void>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<void>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<void>
+  using Result_void_ = Result<void>;
+  inline Result_void_ create_Result_void_() noexcept {
+    return Result<void>::withValue();
+  }
+  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
+    return Result<void>::withError(error);
+  }
+  
+  // pragma MARK: std::optional<double>
+  /**
+   * Specialized version of `std::optional<double>`.
+   */
+  using std__optional_double_ = std::optional<double>;
+  inline std::optional<double> create_std__optional_double_(const double& value) noexcept {
+    return std::optional<double>(value);
+  }
+  inline bool has_value_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline double get_std__optional_double_(const std::optional<double>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<bool>
+  /**
+   * Specialized version of `std::optional<bool>`.
+   */
+  using std__optional_bool_ = std::optional<bool>;
+  inline std::optional<bool> create_std__optional_bool_(const bool& value) noexcept {
+    return std::optional<bool>(value);
+  }
+  inline bool has_value_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::optional<std::string>
+  /**
+   * Specialized version of `std::optional<std::string>`.
+   */
+  using std__optional_std__string_ = std::optional<std::string>;
+  inline std::optional<std::string> create_std__optional_std__string_(const std::string& value) noexcept {
+    return std::optional<std::string>(value);
+  }
+  inline bool has_value_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::vector<NativeHapticEvent>
+  /**
+   * Specialized version of `std::vector<NativeHapticEvent>`.
+   */
+  using std__vector_NativeHapticEvent_ = std::vector<NativeHapticEvent>;
+  inline std::vector<NativeHapticEvent> create_std__vector_NativeHapticEvent_(size_t size) noexcept {
+    std::vector<NativeHapticEvent> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
   // pragma MARK: std::vector<HapticCurve>
   /**
    * Specialized version of `std::vector<HapticCurve>`.
@@ -131,6 +291,151 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
   using std__vector_HapticCurve_ = std::vector<HapticCurve>;
   inline std::vector<HapticCurve> create_std__vector_HapticCurve_(size_t size) noexcept {
     std::vector<HapticCurve> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<AndroidPrimitiveInfo>
+  /**
+   * Specialized version of `std::vector<AndroidPrimitiveInfo>`.
+   */
+  using std__vector_AndroidPrimitiveInfo_ = std::vector<AndroidPrimitiveInfo>;
+  inline std::vector<AndroidPrimitiveInfo> create_std__vector_AndroidPrimitiveInfo_(size_t size) noexcept {
+    std::vector<AndroidPrimitiveInfo> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<AndroidEffectInfo>
+  /**
+   * Specialized version of `std::vector<AndroidEffectInfo>`.
+   */
+  using std__vector_AndroidEffectInfo_ = std::vector<AndroidEffectInfo>;
+  inline std::vector<AndroidEffectInfo> create_std__vector_AndroidEffectInfo_(size_t size) noexcept {
+    std::vector<AndroidEffectInfo> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<double>
+  /**
+   * Specialized version of `std::vector<double>`.
+   */
+  using std__vector_double_ = std::vector<double>;
+  inline std::vector<double> create_std__vector_double_(size_t size) noexcept {
+    std::vector<double> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<std::string>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<std::string>>`.
+   */
+  using std__shared_ptr_Promise_std__string__ = std::shared_ptr<Promise<std::string>>;
+  inline std::shared_ptr<Promise<std::string>> create_std__shared_ptr_Promise_std__string__() noexcept {
+    return Promise<std::string>::create();
+  }
+  inline PromiseHolder<std::string> wrap_std__shared_ptr_Promise_std__string__(std::shared_ptr<Promise<std::string>> promise) noexcept {
+    return PromiseHolder<std::string>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const std::string& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const std::string&)>`.
+   */
+  using Func_void_std__string = std::function<void(const std::string& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::string& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__string_Wrapper final {
+  public:
+    explicit Func_void_std__string_Wrapper(std::function<void(const std::string& /* result */)>&& func): _function(std::make_unique<std::function<void(const std::string& /* result */)>>(std::move(func))) {}
+    inline void call(std::string result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::string& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__string create_Func_void_std__string(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__string_Wrapper wrap_Func_void_std__string(Func_void_std__string value) noexcept {
+    return Func_void_std__string_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const HapticEngineEvent& /* event */)>
+  /**
+   * Specialized version of `std::function<void(const HapticEngineEvent&)>`.
+   */
+  using Func_void_HapticEngineEvent = std::function<void(const HapticEngineEvent& /* event */)>;
+  /**
+   * Wrapper class for a `std::function<void(const HapticEngineEvent& / * event * /)>`, this can be used from Swift.
+   */
+  class Func_void_HapticEngineEvent_Wrapper final {
+  public:
+    explicit Func_void_HapticEngineEvent_Wrapper(std::function<void(const HapticEngineEvent& /* event */)>&& func): _function(std::make_unique<std::function<void(const HapticEngineEvent& /* event */)>>(std::move(func))) {}
+    inline void call(HapticEngineEvent event) const noexcept {
+      _function->operator()(event);
+    }
+  private:
+    std::unique_ptr<std::function<void(const HapticEngineEvent& /* event */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_HapticEngineEvent create_Func_void_HapticEngineEvent(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_HapticEngineEvent_Wrapper wrap_Func_void_HapticEngineEvent(Func_void_HapticEngineEvent value) noexcept {
+    return Func_void_HapticEngineEvent_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<bool>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<bool>>`.
+   */
+  using std__shared_ptr_Promise_bool__ = std::shared_ptr<Promise<bool>>;
+  inline std::shared_ptr<Promise<bool>> create_std__shared_ptr_Promise_bool__() noexcept {
+    return Promise<bool>::create();
+  }
+  inline PromiseHolder<bool> wrap_std__shared_ptr_Promise_bool__(std::shared_ptr<Promise<bool>> promise) noexcept {
+    return PromiseHolder<bool>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(bool /* result */)>
+  /**
+   * Specialized version of `std::function<void(bool)>`.
+   */
+  using Func_void_bool = std::function<void(bool /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(bool / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_bool_Wrapper final {
+  public:
+    explicit Func_void_bool_Wrapper(std::function<void(bool /* result */)>&& func): _function(std::make_unique<std::function<void(bool /* result */)>>(std::move(func))) {}
+    inline void call(bool result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(bool /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_bool_Wrapper wrap_Func_void_bool(Func_void_bool value) noexcept {
+    return Func_void_bool_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::vector<NativePrimitiveStep>
+  /**
+   * Specialized version of `std::vector<NativePrimitiveStep>`.
+   */
+  using std__vector_NativePrimitiveStep_ = std::vector<NativePrimitiveStep>;
+  inline std::vector<NativePrimitiveStep> create_std__vector_NativePrimitiveStep_(size_t size) noexcept {
+    std::vector<NativePrimitiveStep> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<NativeEnvelopePoint>
+  /**
+   * Specialized version of `std::vector<NativeEnvelopePoint>`.
+   */
+  using std__vector_NativeEnvelopePoint_ = std::vector<NativeEnvelopePoint>;
+  inline std::vector<NativeEnvelopePoint> create_std__vector_NativeEnvelopePoint_(size_t size) noexcept {
+    std::vector<NativeEnvelopePoint> vector;
     vector.reserve(size);
     return vector;
   }
@@ -156,13 +461,49 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
     return Result<bool>::withError(error);
   }
   
-  // pragma MARK: Result<std::shared_ptr<Promise<void>>>
-  using Result_std__shared_ptr_Promise_void___ = Result<std::shared_ptr<Promise<void>>>;
-  inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::shared_ptr<Promise<void>>& value) noexcept {
-    return Result<std::shared_ptr<Promise<void>>>::withValue(value);
+  // pragma MARK: Result<HapticCapabilities>
+  using Result_HapticCapabilities_ = Result<HapticCapabilities>;
+  inline Result_HapticCapabilities_ create_Result_HapticCapabilities_(const HapticCapabilities& value) noexcept {
+    return Result<HapticCapabilities>::withValue(value);
   }
-  inline Result_std__shared_ptr_Promise_void___ create_Result_std__shared_ptr_Promise_void___(const std::exception_ptr& error) noexcept {
-    return Result<std::shared_ptr<Promise<void>>>::withError(error);
+  inline Result_HapticCapabilities_ create_Result_HapticCapabilities_(const std::exception_ptr& error) noexcept {
+    return Result<HapticCapabilities>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<std::string>>>
+  using Result_std__shared_ptr_Promise_std__string___ = Result<std::shared_ptr<Promise<std::string>>>;
+  inline Result_std__shared_ptr_Promise_std__string___ create_Result_std__shared_ptr_Promise_std__string___(const std::shared_ptr<Promise<std::string>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<std::string>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_std__string___ create_Result_std__shared_ptr_Promise_std__string___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<std::string>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<HybridHapticPlayerSpec>>
+  using Result_std__shared_ptr_HybridHapticPlayerSpec__ = Result<std::shared_ptr<HybridHapticPlayerSpec>>;
+  inline Result_std__shared_ptr_HybridHapticPlayerSpec__ create_Result_std__shared_ptr_HybridHapticPlayerSpec__(const std::shared_ptr<HybridHapticPlayerSpec>& value) noexcept {
+    return Result<std::shared_ptr<HybridHapticPlayerSpec>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_HybridHapticPlayerSpec__ create_Result_std__shared_ptr_HybridHapticPlayerSpec__(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<HybridHapticPlayerSpec>>::withError(error);
+  }
+  
+  // pragma MARK: Result<HapticEngineState>
+  using Result_HapticEngineState_ = Result<HapticEngineState>;
+  inline Result_HapticEngineState_ create_Result_HapticEngineState_(const HapticEngineState& value) noexcept {
+    return Result<HapticEngineState>::withValue(value);
+  }
+  inline Result_HapticEngineState_ create_Result_HapticEngineState_(const std::exception_ptr& error) noexcept {
+    return Result<HapticEngineState>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<bool>>>
+  using Result_std__shared_ptr_Promise_bool___ = Result<std::shared_ptr<Promise<bool>>>;
+  inline Result_std__shared_ptr_Promise_bool___ create_Result_std__shared_ptr_Promise_bool___(const std::shared_ptr<Promise<bool>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<bool>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_bool___ create_Result_std__shared_ptr_Promise_bool___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<bool>>>::withError(error);
   }
 
 } // namespace margelo::nitro::munimhaptics::bridge::swift

@@ -17,7 +17,9 @@ import com.facebook.proguard.annotations.DoNotStrip
 @Keep
 enum class HapticEventType(@DoNotStrip @Keep val value: Int) {
   TRANSIENT(0),
-  CONTINUOUS(1);
+  CONTINUOUS(1),
+  AUDIOCONTINUOUS(2),
+  AUDIOCUSTOM(3);
 
   companion object
 }

@@ -21,6 +21,10 @@ public extension HapticEventType {
         self = .transient
       case "continuous":
         self = .continuous
+      case "audioContinuous":
+        self = .audiocontinuous
+      case "audioCustom":
+        self = .audiocustom
       default:
         return nil
     }
@@ -35,6 +39,10 @@ public extension HapticEventType {
         return "transient"
       case .continuous:
         return "continuous"
+      case .audiocontinuous:
+        return "audioContinuous"
+      case .audiocustom:
+        return "audioCustom"
     }
   }
 }

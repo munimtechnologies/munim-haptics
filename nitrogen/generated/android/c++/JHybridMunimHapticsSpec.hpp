@@ -58,6 +58,30 @@ namespace margelo::nitro::munimhaptics {
     std::shared_ptr<Promise<void>> prepare() override;
     std::shared_ptr<Promise<void>> playPattern(const NativeHapticPattern& pattern) override;
     std::shared_ptr<Promise<void>> stop() override;
+    HapticCapabilities getCapabilities() override;
+    std::shared_ptr<Promise<void>> impact(ImpactStyle style, double intensity) override;
+    std::shared_ptr<Promise<void>> notification(NotificationFeedbackType type) override;
+    std::shared_ptr<Promise<void>> selection() override;
+    std::shared_ptr<Promise<void>> prepareImpact(ImpactStyle style) override;
+    std::shared_ptr<Promise<void>> prepareNotification() override;
+    std::shared_ptr<Promise<void>> prepareSelection() override;
+    std::shared_ptr<Promise<void>> playAHAP(const std::string& ahap) override;
+    std::shared_ptr<Promise<void>> playAHAPFile(const std::string& path) override;
+    std::shared_ptr<Promise<std::string>> readTextFile(const std::string& path) override;
+    std::shared_ptr<HybridHapticPlayerSpec> createPlayer(const NativeHapticPattern& pattern) override;
+    std::shared_ptr<HybridHapticPlayerSpec> createPlayerFromAHAP(const std::string& ahap) override;
+    std::shared_ptr<Promise<void>> startEngine() override;
+    std::shared_ptr<Promise<void>> stopEngine() override;
+    void setEngineOptions(const HapticEngineOptions& options) override;
+    HapticEngineState getEngineState() override;
+    void setEngineListener(const std::function<void(const HapticEngineEvent& /* event */)>& listener) override;
+    std::shared_ptr<Promise<void>> vibrate(double durationMs, double amplitude, const NativeVibrationOptions& options) override;
+    std::shared_ptr<Promise<void>> playWaveform(const std::vector<double>& timingsMs, const std::vector<double>& amplitudes, double repeatIndex, const NativeVibrationOptions& options) override;
+    std::shared_ptr<Promise<bool>> playPredefined(AndroidPredefinedEffect effect, bool fallback, const NativeVibrationOptions& options) override;
+    std::shared_ptr<Promise<bool>> playPrimitives(const std::vector<NativePrimitiveStep>& steps, bool fallback, const NativeVibrationOptions& options) override;
+    std::shared_ptr<Promise<void>> playEnvelope(const NativeHapticEnvelope& envelope, const NativeVibrationOptions& options) override;
+    std::shared_ptr<Promise<bool>> performHapticFeedback(AndroidHapticFeedback feedback, bool fallback) override;
+    std::shared_ptr<Promise<void>> cancel() override;
 
   private:
     jni::global_ref<JHybridMunimHapticsSpec::JavaPart> _javaPart;

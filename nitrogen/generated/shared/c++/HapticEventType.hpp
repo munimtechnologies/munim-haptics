@@ -31,6 +31,8 @@ namespace margelo::nitro::munimhaptics {
   enum class HapticEventType {
     TRANSIENT      SWIFT_NAME(transient) = 0,
     CONTINUOUS      SWIFT_NAME(continuous) = 1,
+    AUDIOCONTINUOUS      SWIFT_NAME(audiocontinuous) = 2,
+    AUDIOCUSTOM      SWIFT_NAME(audiocustom) = 3,
   } CLOSED_ENUM;
 
 } // namespace margelo::nitro::munimhaptics
@@ -45,6 +47,8 @@ namespace margelo::nitro {
       switch (hashString(unionValue.c_str(), unionValue.size())) {
         case hashString("transient"): return margelo::nitro::munimhaptics::HapticEventType::TRANSIENT;
         case hashString("continuous"): return margelo::nitro::munimhaptics::HapticEventType::CONTINUOUS;
+        case hashString("audioContinuous"): return margelo::nitro::munimhaptics::HapticEventType::AUDIOCONTINUOUS;
+        case hashString("audioCustom"): return margelo::nitro::munimhaptics::HapticEventType::AUDIOCUSTOM;
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert \"" + unionValue + "\" to enum HapticEventType - invalid value!");
       }
@@ -53,6 +57,8 @@ namespace margelo::nitro {
       switch (arg) {
         case margelo::nitro::munimhaptics::HapticEventType::TRANSIENT: return JSIConverter<std::string>::toJSI(runtime, "transient");
         case margelo::nitro::munimhaptics::HapticEventType::CONTINUOUS: return JSIConverter<std::string>::toJSI(runtime, "continuous");
+        case margelo::nitro::munimhaptics::HapticEventType::AUDIOCONTINUOUS: return JSIConverter<std::string>::toJSI(runtime, "audioContinuous");
+        case margelo::nitro::munimhaptics::HapticEventType::AUDIOCUSTOM: return JSIConverter<std::string>::toJSI(runtime, "audioCustom");
         default: [[unlikely]]
           throw std::invalid_argument("Cannot convert HapticEventType to JS - invalid value: "
                                     + std::to_string(static_cast<int>(arg)) + "!");
@@ -66,6 +72,8 @@ namespace margelo::nitro {
       switch (hashString(unionValue.c_str(), unionValue.size())) {
         case hashString("transient"):
         case hashString("continuous"):
+        case hashString("audioContinuous"):
+        case hashString("audioCustom"):
           return true;
         default:
           return false;

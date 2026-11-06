@@ -20,6 +20,8 @@
 #include "JHapticEventType.hpp"
 #include "JNativeHapticEvent.hpp"
 #include "NativeHapticEvent.hpp"
+#include <optional>
+#include <string>
 #include <vector>
 
 namespace margelo::nitro::munimhaptics {

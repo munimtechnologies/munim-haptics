@@ -32,7 +32,34 @@ data class NativeHapticEvent(
   val intensity: Double,
   @DoNotStrip
   @Keep
-  val sharpness: Double
+  val sharpness: Double,
+  @DoNotStrip
+  @Keep
+  val attackTime: Double?,
+  @DoNotStrip
+  @Keep
+  val decayTime: Double?,
+  @DoNotStrip
+  @Keep
+  val releaseTime: Double?,
+  @DoNotStrip
+  @Keep
+  val sustained: Boolean?,
+  @DoNotStrip
+  @Keep
+  val audioVolume: Double?,
+  @DoNotStrip
+  @Keep
+  val audioPitch: Double?,
+  @DoNotStrip
+  @Keep
+  val audioPan: Double?,
+  @DoNotStrip
+  @Keep
+  val audioBrightness: Double?,
+  @DoNotStrip
+  @Keep
+  val resource: String?
 ) {
   /* primary constructor */
 
@@ -44,6 +71,15 @@ data class NativeHapticEvent(
       && Objects.deepEquals(this.duration, other.duration)
       && Objects.deepEquals(this.intensity, other.intensity)
       && Objects.deepEquals(this.sharpness, other.sharpness)
+      && Objects.deepEquals(this.attackTime, other.attackTime)
+      && Objects.deepEquals(this.decayTime, other.decayTime)
+      && Objects.deepEquals(this.releaseTime, other.releaseTime)
+      && Objects.deepEquals(this.sustained, other.sustained)
+      && Objects.deepEquals(this.audioVolume, other.audioVolume)
+      && Objects.deepEquals(this.audioPitch, other.audioPitch)
+      && Objects.deepEquals(this.audioPan, other.audioPan)
+      && Objects.deepEquals(this.audioBrightness, other.audioBrightness)
+      && Objects.deepEquals(this.resource, other.resource)
   }
 
   override fun hashCode(): Int {
@@ -52,7 +88,16 @@ data class NativeHapticEvent(
       time,
       duration,
       intensity,
-      sharpness
+      sharpness,
+      attackTime,
+      decayTime,
+      releaseTime,
+      sustained,
+      audioVolume,
+      audioPitch,
+      audioPan,
+      audioBrightness,
+      resource
     ).contentDeepHashCode()
   }
 
@@ -64,8 +109,8 @@ data class NativeHapticEvent(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(type: HapticEventType, time: Double, duration: Double, intensity: Double, sharpness: Double): NativeHapticEvent {
-      return NativeHapticEvent(type, time, duration, intensity, sharpness)
+    private fun fromCpp(type: HapticEventType, time: Double, duration: Double, intensity: Double, sharpness: Double, attackTime: Double?, decayTime: Double?, releaseTime: Double?, sustained: Boolean?, audioVolume: Double?, audioPitch: Double?, audioPan: Double?, audioBrightness: Double?, resource: String?): NativeHapticEvent {
+      return NativeHapticEvent(type, time, duration, intensity, sharpness, attackTime, decayTime, releaseTime, sustained, audioVolume, audioPitch, audioPan, audioBrightness, resource)
     }
   }
 }

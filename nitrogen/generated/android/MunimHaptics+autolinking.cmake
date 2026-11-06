@@ -33,8 +33,10 @@ target_sources(
   # Autolinking Setup
   ../nitrogen/generated/android/MunimHapticsOnLoad.cpp
   # Shared Nitrogen C++ sources
+  ../nitrogen/generated/shared/c++/HybridHapticPlayerSpec.cpp
   ../nitrogen/generated/shared/c++/HybridMunimHapticsSpec.cpp
   # Android-specific Nitrogen C++ sources
+  ../nitrogen/generated/android/c++/JHybridHapticPlayerSpec.cpp
   ../nitrogen/generated/android/c++/JHybridMunimHapticsSpec.cpp
 )
 

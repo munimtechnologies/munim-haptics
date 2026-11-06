@@ -48,6 +48,12 @@ namespace margelo::nitro::munimhaptics {
         case HapticEventType::CONTINUOUS:
           static const auto fieldCONTINUOUS = clazz->getStaticField<JHapticEventType>("CONTINUOUS");
           return clazz->getStaticFieldValue(fieldCONTINUOUS);
+        case HapticEventType::AUDIOCONTINUOUS:
+          static const auto fieldAUDIOCONTINUOUS = clazz->getStaticField<JHapticEventType>("AUDIOCONTINUOUS");
+          return clazz->getStaticFieldValue(fieldAUDIOCONTINUOUS);
+        case HapticEventType::AUDIOCUSTOM:
+          static const auto fieldAUDIOCUSTOM = clazz->getStaticField<JHapticEventType>("AUDIOCUSTOM");
+          return clazz->getStaticFieldValue(fieldAUDIOCUSTOM);
         default:
           std::string stringValue = std::to_string(static_cast<int>(value));
           throw std::invalid_argument("Invalid enum value (" + stringValue + "!");

@@ -48,6 +48,27 @@ namespace margelo::nitro::munimhaptics {
         case HapticCurveParameter::SHARPNESS:
           static const auto fieldSHARPNESS = clazz->getStaticField<JHapticCurveParameter>("SHARPNESS");
           return clazz->getStaticFieldValue(fieldSHARPNESS);
+        case HapticCurveParameter::ATTACKTIME:
+          static const auto fieldATTACKTIME = clazz->getStaticField<JHapticCurveParameter>("ATTACKTIME");
+          return clazz->getStaticFieldValue(fieldATTACKTIME);
+        case HapticCurveParameter::DECAYTIME:
+          static const auto fieldDECAYTIME = clazz->getStaticField<JHapticCurveParameter>("DECAYTIME");
+          return clazz->getStaticFieldValue(fieldDECAYTIME);
+        case HapticCurveParameter::RELEASETIME:
+          static const auto fieldRELEASETIME = clazz->getStaticField<JHapticCurveParameter>("RELEASETIME");
+          return clazz->getStaticFieldValue(fieldRELEASETIME);
+        case HapticCurveParameter::AUDIOVOLUME:
+          static const auto fieldAUDIOVOLUME = clazz->getStaticField<JHapticCurveParameter>("AUDIOVOLUME");
+          return clazz->getStaticFieldValue(fieldAUDIOVOLUME);
+        case HapticCurveParameter::AUDIOPAN:
+          static const auto fieldAUDIOPAN = clazz->getStaticField<JHapticCurveParameter>("AUDIOPAN");
+          return clazz->getStaticFieldValue(fieldAUDIOPAN);
+        case HapticCurveParameter::AUDIOPITCH:
+          static const auto fieldAUDIOPITCH = clazz->getStaticField<JHapticCurveParameter>("AUDIOPITCH");
+          return clazz->getStaticFieldValue(fieldAUDIOPITCH);
+        case HapticCurveParameter::AUDIOBRIGHTNESS:
+          static const auto fieldAUDIOBRIGHTNESS = clazz->getStaticField<JHapticCurveParameter>("AUDIOBRIGHTNESS");
+          return clazz->getStaticFieldValue(fieldAUDIOBRIGHTNESS);
         default:
           std::string stringValue = std::to_string(static_cast<int>(value));
           throw std::invalid_argument("Invalid enum value (" + stringValue + "!");

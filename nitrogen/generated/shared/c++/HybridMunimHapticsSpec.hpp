@@ -15,9 +15,49 @@
 
 // Forward declaration of `NativeHapticPattern` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct NativeHapticPattern; }
+// Forward declaration of `HapticCapabilities` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticCapabilities; }
+// Forward declaration of `ImpactStyle` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class ImpactStyle; }
+// Forward declaration of `NotificationFeedbackType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class NotificationFeedbackType; }
+// Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
+// Forward declaration of `HapticEngineOptions` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineOptions; }
+// Forward declaration of `HapticEngineState` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineState; }
+// Forward declaration of `HapticEngineEvent` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineEvent; }
+// Forward declaration of `NativeVibrationOptions` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeVibrationOptions; }
+// Forward declaration of `AndroidPredefinedEffect` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPredefinedEffect; }
+// Forward declaration of `NativePrimitiveStep` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativePrimitiveStep; }
+// Forward declaration of `NativeHapticEnvelope` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeHapticEnvelope; }
+// Forward declaration of `AndroidHapticFeedback` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidHapticFeedback; }
 
 #include <NitroModules/Promise.hpp>
 #include "NativeHapticPattern.hpp"
+#include "HapticCapabilities.hpp"
+#include "ImpactStyle.hpp"
+#include "NotificationFeedbackType.hpp"
+#include <string>
+#include <memory>
+#include "HybridHapticPlayerSpec.hpp"
+#include "HapticEngineOptions.hpp"
+#include "HapticEngineState.hpp"
+#include "HapticEngineEvent.hpp"
+#include <functional>
+#include "NativeVibrationOptions.hpp"
+#include <vector>
+#include "AndroidPredefinedEffect.hpp"
+#include "NativePrimitiveStep.hpp"
+#include "NativeHapticEnvelope.hpp"
+#include "AndroidHapticFeedback.hpp"
 
 namespace margelo::nitro::munimhaptics {
 
@@ -54,6 +94,30 @@ namespace margelo::nitro::munimhaptics {
       virtual std::shared_ptr<Promise<void>> prepare() = 0;
       virtual std::shared_ptr<Promise<void>> playPattern(const NativeHapticPattern& pattern) = 0;
       virtual std::shared_ptr<Promise<void>> stop() = 0;
+      virtual HapticCapabilities getCapabilities() = 0;
+      virtual std::shared_ptr<Promise<void>> impact(ImpactStyle style, double intensity) = 0;
+      virtual std::shared_ptr<Promise<void>> notification(NotificationFeedbackType type) = 0;
+      virtual std::shared_ptr<Promise<void>> selection() = 0;
+      virtual std::shared_ptr<Promise<void>> prepareImpact(ImpactStyle style) = 0;
+      virtual std::shared_ptr<Promise<void>> prepareNotification() = 0;
+      virtual std::shared_ptr<Promise<void>> prepareSelection() = 0;
+      virtual std::shared_ptr<Promise<void>> playAHAP(const std::string& ahap) = 0;
+      virtual std::shared_ptr<Promise<void>> playAHAPFile(const std::string& path) = 0;
+      virtual std::shared_ptr<Promise<std::string>> readTextFile(const std::string& path) = 0;
+      virtual std::shared_ptr<HybridHapticPlayerSpec> createPlayer(const NativeHapticPattern& pattern) = 0;
+      virtual std::shared_ptr<HybridHapticPlayerSpec> createPlayerFromAHAP(const std::string& ahap) = 0;
+      virtual std::shared_ptr<Promise<void>> startEngine() = 0;
+      virtual std::shared_ptr<Promise<void>> stopEngine() = 0;
+      virtual void setEngineOptions(const HapticEngineOptions& options) = 0;
+      virtual HapticEngineState getEngineState() = 0;
+      virtual void setEngineListener(const std::function<void(const HapticEngineEvent& /* event */)>& listener) = 0;
+      virtual std::shared_ptr<Promise<void>> vibrate(double durationMs, double amplitude, const NativeVibrationOptions& options) = 0;
+      virtual std::shared_ptr<Promise<void>> playWaveform(const std::vector<double>& timingsMs, const std::vector<double>& amplitudes, double repeatIndex, const NativeVibrationOptions& options) = 0;
+      virtual std::shared_ptr<Promise<bool>> playPredefined(AndroidPredefinedEffect effect, bool fallback, const NativeVibrationOptions& options) = 0;
+      virtual std::shared_ptr<Promise<bool>> playPrimitives(const std::vector<NativePrimitiveStep>& steps, bool fallback, const NativeVibrationOptions& options) = 0;
+      virtual std::shared_ptr<Promise<void>> playEnvelope(const NativeHapticEnvelope& envelope, const NativeVibrationOptions& options) = 0;
+      virtual std::shared_ptr<Promise<bool>> performHapticFeedback(AndroidHapticFeedback feedback, bool fallback) = 0;
+      virtual std::shared_ptr<Promise<void>> cancel() = 0;
 
     protected:
       // Hybrid Setup

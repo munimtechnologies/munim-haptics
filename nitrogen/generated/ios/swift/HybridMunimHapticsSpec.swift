@@ -17,6 +17,30 @@ public protocol HybridMunimHapticsSpec_protocol: HybridObject {
   func prepare() throws -> Promise<Void>
   func playPattern(pattern: NativeHapticPattern) throws -> Promise<Void>
   func stop() throws -> Promise<Void>
+  func getCapabilities() throws -> HapticCapabilities
+  func impact(style: ImpactStyle, intensity: Double) throws -> Promise<Void>
+  func notification(type: NotificationFeedbackType) throws -> Promise<Void>
+  func selection() throws -> Promise<Void>
+  func prepareImpact(style: ImpactStyle) throws -> Promise<Void>
+  func prepareNotification() throws -> Promise<Void>
+  func prepareSelection() throws -> Promise<Void>
+  func playAHAP(ahap: String) throws -> Promise<Void>
+  func playAHAPFile(path: String) throws -> Promise<Void>
+  func readTextFile(path: String) throws -> Promise<String>
+  func createPlayer(pattern: NativeHapticPattern) throws -> (any HybridHapticPlayerSpec)
+  func createPlayerFromAHAP(ahap: String) throws -> (any HybridHapticPlayerSpec)
+  func startEngine() throws -> Promise<Void>
+  func stopEngine() throws -> Promise<Void>
+  func setEngineOptions(options: HapticEngineOptions) throws -> Void
+  func getEngineState() throws -> HapticEngineState
+  func setEngineListener(listener: @escaping (_ event: HapticEngineEvent) -> Void) throws -> Void
+  func vibrate(durationMs: Double, amplitude: Double, options: NativeVibrationOptions) throws -> Promise<Void>
+  func playWaveform(timingsMs: [Double], amplitudes: [Double], repeatIndex: Double, options: NativeVibrationOptions) throws -> Promise<Void>
+  func playPredefined(effect: AndroidPredefinedEffect, fallback: Bool, options: NativeVibrationOptions) throws -> Promise<Bool>
+  func playPrimitives(steps: [NativePrimitiveStep], fallback: Bool, options: NativeVibrationOptions) throws -> Promise<Bool>
+  func playEnvelope(envelope: NativeHapticEnvelope, options: NativeVibrationOptions) throws -> Promise<Void>
+  func performHapticFeedback(feedback: AndroidHapticFeedback, fallback: Bool) throws -> Promise<Bool>
+  func cancel() throws -> Promise<Void>
 }
 
 public extension HybridMunimHapticsSpec_protocol {

@@ -24,15 +24,85 @@ namespace margelo::nitro::munimhaptics { struct HapticCurve; }
 namespace margelo::nitro::munimhaptics { enum class HapticCurveParameter; }
 // Forward declaration of `HapticCurvePoint` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticCurvePoint; }
+// Forward declaration of `HapticCapabilities` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticCapabilities; }
+// Forward declaration of `AndroidPrimitiveInfo` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct AndroidPrimitiveInfo; }
+// Forward declaration of `AndroidPrimitive` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPrimitive; }
+// Forward declaration of `AndroidEffectInfo` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct AndroidEffectInfo; }
+// Forward declaration of `AndroidPredefinedEffect` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPredefinedEffect; }
+// Forward declaration of `AndroidEffectSupport` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidEffectSupport; }
+// Forward declaration of `ImpactStyle` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class ImpactStyle; }
+// Forward declaration of `NotificationFeedbackType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class NotificationFeedbackType; }
+// Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
+// Forward declaration of `HapticEngineOptions` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineOptions; }
+// Forward declaration of `HapticEngineState` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineState; }
+// Forward declaration of `HapticEngineEvent` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct HapticEngineEvent; }
+// Forward declaration of `HapticEngineEventType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class HapticEngineEventType; }
+// Forward declaration of `HapticEngineStopReason` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class HapticEngineStopReason; }
+// Forward declaration of `NativeVibrationOptions` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeVibrationOptions; }
+// Forward declaration of `AndroidVibrationUsage` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidVibrationUsage; }
+// Forward declaration of `NativePrimitiveStep` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativePrimitiveStep; }
+// Forward declaration of `AndroidPrimitiveDelayType` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidPrimitiveDelayType; }
+// Forward declaration of `NativeHapticEnvelope` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeHapticEnvelope; }
+// Forward declaration of `AndroidEnvelopeKind` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidEnvelopeKind; }
+// Forward declaration of `NativeEnvelopePoint` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct NativeEnvelopePoint; }
+// Forward declaration of `AndroidHapticFeedback` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { enum class AndroidHapticFeedback; }
 
 #include <NitroModules/Promise.hpp>
 #include "NativeHapticPattern.hpp"
 #include "NativeHapticEvent.hpp"
 #include <vector>
 #include "HapticEventType.hpp"
+#include <optional>
+#include <string>
 #include "HapticCurve.hpp"
 #include "HapticCurveParameter.hpp"
 #include "HapticCurvePoint.hpp"
+#include "HapticCapabilities.hpp"
+#include "AndroidPrimitiveInfo.hpp"
+#include "AndroidPrimitive.hpp"
+#include "AndroidEffectInfo.hpp"
+#include "AndroidPredefinedEffect.hpp"
+#include "AndroidEffectSupport.hpp"
+#include "ImpactStyle.hpp"
+#include "NotificationFeedbackType.hpp"
+#include <memory>
+#include "HybridHapticPlayerSpec.hpp"
+#include "HapticEngineOptions.hpp"
+#include "HapticEngineState.hpp"
+#include "HapticEngineEvent.hpp"
+#include <functional>
+#include "HapticEngineEventType.hpp"
+#include "HapticEngineStopReason.hpp"
+#include "NativeVibrationOptions.hpp"
+#include "AndroidVibrationUsage.hpp"
+#include "NativePrimitiveStep.hpp"
+#include "AndroidPrimitiveDelayType.hpp"
+#include "NativeHapticEnvelope.hpp"
+#include "AndroidEnvelopeKind.hpp"
+#include "NativeEnvelopePoint.hpp"
+#include "AndroidHapticFeedback.hpp"
 
 #include "MunimHaptics-Swift-Cxx-Umbrella.hpp"
 
@@ -110,6 +180,194 @@ namespace margelo::nitro::munimhaptics {
     }
     inline std::shared_ptr<Promise<void>> stop() override {
       auto __result = _swiftPart.stop();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline HapticCapabilities getCapabilities() override {
+      auto __result = _swiftPart.getCapabilities();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> impact(ImpactStyle style, double intensity) override {
+      auto __result = _swiftPart.impact(static_cast<int>(style), std::forward<decltype(intensity)>(intensity));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> notification(NotificationFeedbackType type) override {
+      auto __result = _swiftPart.notification(static_cast<int>(type));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> selection() override {
+      auto __result = _swiftPart.selection();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> prepareImpact(ImpactStyle style) override {
+      auto __result = _swiftPart.prepareImpact(static_cast<int>(style));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> prepareNotification() override {
+      auto __result = _swiftPart.prepareNotification();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> prepareSelection() override {
+      auto __result = _swiftPart.prepareSelection();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> playAHAP(const std::string& ahap) override {
+      auto __result = _swiftPart.playAHAP(ahap);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> playAHAPFile(const std::string& path) override {
+      auto __result = _swiftPart.playAHAPFile(path);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<std::string>> readTextFile(const std::string& path) override {
+      auto __result = _swiftPart.readTextFile(path);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<HybridHapticPlayerSpec> createPlayer(const NativeHapticPattern& pattern) override {
+      auto __result = _swiftPart.createPlayer(std::forward<decltype(pattern)>(pattern));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<HybridHapticPlayerSpec> createPlayerFromAHAP(const std::string& ahap) override {
+      auto __result = _swiftPart.createPlayerFromAHAP(ahap);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> startEngine() override {
+      auto __result = _swiftPart.startEngine();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> stopEngine() override {
+      auto __result = _swiftPart.stopEngine();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void setEngineOptions(const HapticEngineOptions& options) override {
+      auto __result = _swiftPart.setEngineOptions(std::forward<decltype(options)>(options));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline HapticEngineState getEngineState() override {
+      auto __result = _swiftPart.getEngineState();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void setEngineListener(const std::function<void(const HapticEngineEvent& /* event */)>& listener) override {
+      auto __result = _swiftPart.setEngineListener(listener);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<void>> vibrate(double durationMs, double amplitude, const NativeVibrationOptions& options) override {
+      auto __result = _swiftPart.vibrate(std::forward<decltype(durationMs)>(durationMs), std::forward<decltype(amplitude)>(amplitude), std::forward<decltype(options)>(options));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> playWaveform(const std::vector<double>& timingsMs, const std::vector<double>& amplitudes, double repeatIndex, const NativeVibrationOptions& options) override {
+      auto __result = _swiftPart.playWaveform(timingsMs, amplitudes, std::forward<decltype(repeatIndex)>(repeatIndex), std::forward<decltype(options)>(options));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<bool>> playPredefined(AndroidPredefinedEffect effect, bool fallback, const NativeVibrationOptions& options) override {
+      auto __result = _swiftPart.playPredefined(static_cast<int>(effect), std::forward<decltype(fallback)>(fallback), std::forward<decltype(options)>(options));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<bool>> playPrimitives(const std::vector<NativePrimitiveStep>& steps, bool fallback, const NativeVibrationOptions& options) override {
+      auto __result = _swiftPart.playPrimitives(steps, std::forward<decltype(fallback)>(fallback), std::forward<decltype(options)>(options));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> playEnvelope(const NativeHapticEnvelope& envelope, const NativeVibrationOptions& options) override {
+      auto __result = _swiftPart.playEnvelope(std::forward<decltype(envelope)>(envelope), std::forward<decltype(options)>(options));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<bool>> performHapticFeedback(AndroidHapticFeedback feedback, bool fallback) override {
+      auto __result = _swiftPart.performHapticFeedback(static_cast<int>(feedback), std::forward<decltype(fallback)>(fallback));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> cancel() override {
+      auto __result = _swiftPart.cancel();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

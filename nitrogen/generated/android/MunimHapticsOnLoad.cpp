@@ -15,7 +15,10 @@
 #include <fbjni/fbjni.h>
 #include <NitroModules/HybridObjectRegistry.hpp>
 
+#include "JHybridHapticPlayerSpec.hpp"
+#include "JFunc_void_HapticPlayerCompletion.hpp"
 #include "JHybridMunimHapticsSpec.hpp"
+#include "JFunc_void_HapticEngineEvent.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::munimhaptics {
@@ -40,7 +43,10 @@ void registerAllNatives() {
   using namespace margelo::nitro::munimhaptics;
 
   // Register native JNI methods
+  margelo::nitro::munimhaptics::JHybridHapticPlayerSpec::CxxPart::registerNatives();
+  margelo::nitro::munimhaptics::JFunc_void_HapticPlayerCompletion_cxx::registerNatives();
   margelo::nitro::munimhaptics::JHybridMunimHapticsSpec::CxxPart::registerNatives();
+  margelo::nitro::munimhaptics::JFunc_void_HapticEngineEvent_cxx::registerNatives();
 
   // Register Nitro Hybrid Objects
   HybridObjectRegistry::registerHybridObjectConstructor(

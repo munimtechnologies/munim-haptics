@@ -21,6 +21,20 @@ public extension HapticCurveParameter {
         self = .intensity
       case "sharpness":
         self = .sharpness
+      case "attackTime":
+        self = .attacktime
+      case "decayTime":
+        self = .decaytime
+      case "releaseTime":
+        self = .releasetime
+      case "audioVolume":
+        self = .audiovolume
+      case "audioPan":
+        self = .audiopan
+      case "audioPitch":
+        self = .audiopitch
+      case "audioBrightness":
+        self = .audiobrightness
       default:
         return nil
     }
@@ -35,6 +49,20 @@ public extension HapticCurveParameter {
         return "intensity"
       case .sharpness:
         return "sharpness"
+      case .attacktime:
+        return "attackTime"
+      case .decaytime:
+        return "decayTime"
+      case .releasetime:
+        return "releaseTime"
+      case .audiovolume:
+        return "audioVolume"
+      case .audiopan:
+        return "audioPan"
+      case .audiopitch:
+        return "audioPitch"
+      case .audiobrightness:
+        return "audioBrightness"
     }
   }
 }

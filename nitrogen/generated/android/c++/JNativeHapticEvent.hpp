@@ -12,6 +12,8 @@
 
 #include "HapticEventType.hpp"
 #include "JHapticEventType.hpp"
+#include <optional>
+#include <string>
 
 namespace margelo::nitro::munimhaptics {
 
@@ -42,12 +44,39 @@ namespace margelo::nitro::munimhaptics {
       double intensity = this->getFieldValue(fieldIntensity);
       static const auto fieldSharpness = clazz->getField<double>("sharpness");
       double sharpness = this->getFieldValue(fieldSharpness);
+      static const auto fieldAttackTime = clazz->getField<jni::JDouble>("attackTime");
+      jni::local_ref<jni::JDouble> attackTime = this->getFieldValue(fieldAttackTime);
+      static const auto fieldDecayTime = clazz->getField<jni::JDouble>("decayTime");
+      jni::local_ref<jni::JDouble> decayTime = this->getFieldValue(fieldDecayTime);
+      static const auto fieldReleaseTime = clazz->getField<jni::JDouble>("releaseTime");
+      jni::local_ref<jni::JDouble> releaseTime = this->getFieldValue(fieldReleaseTime);
+      static const auto fieldSustained = clazz->getField<jni::JBoolean>("sustained");
+      jni::local_ref<jni::JBoolean> sustained = this->getFieldValue(fieldSustained);
+      static const auto fieldAudioVolume = clazz->getField<jni::JDouble>("audioVolume");
+      jni::local_ref<jni::JDouble> audioVolume = this->getFieldValue(fieldAudioVolume);
+      static const auto fieldAudioPitch = clazz->getField<jni::JDouble>("audioPitch");
+      jni::local_ref<jni::JDouble> audioPitch = this->getFieldValue(fieldAudioPitch);
+      static const auto fieldAudioPan = clazz->getField<jni::JDouble>("audioPan");
+      jni::local_ref<jni::JDouble> audioPan = this->getFieldValue(fieldAudioPan);
+      static const auto fieldAudioBrightness = clazz->getField<jni::JDouble>("audioBrightness");
+      jni::local_ref<jni::JDouble> audioBrightness = this->getFieldValue(fieldAudioBrightness);
+      static const auto fieldResource = clazz->getField<jni::JString>("resource");
+      jni::local_ref<jni::JString> resource = this->getFieldValue(fieldResource);
       return NativeHapticEvent(
         type->toCpp(),
         time,
         duration,
         intensity,
-        sharpness
+        sharpness,
+        attackTime != nullptr ? std::make_optional(attackTime->value()) : std::nullopt,
+        decayTime != nullptr ? std::make_optional(decayTime->value()) : std::nullopt,
+        releaseTime != nullptr ? std::make_optional(releaseTime->value()) : std::nullopt,
+        sustained != nullptr ? std::make_optional(static_cast<bool>(sustained->value())) : std::nullopt,
+        audioVolume != nullptr ? std::make_optional(audioVolume->value()) : std::nullopt,
+        audioPitch != nullptr ? std::make_optional(audioPitch->value()) : std::nullopt,
+        audioPan != nullptr ? std::make_optional(audioPan->value()) : std::nullopt,
+        audioBrightness != nullptr ? std::make_optional(audioBrightness->value()) : std::nullopt,
+        resource != nullptr ? std::make_optional(resource->toStdString()) : std::nullopt
       );
     }
 
@@ -57,7 +86,7 @@ namespace margelo::nitro::munimhaptics {
      */
     [[maybe_unused]]
     static jni::local_ref<JNativeHapticEvent::javaobject> fromCpp(const NativeHapticEvent& value) {
-      using JSignature = JNativeHapticEvent(jni::alias_ref<JHapticEventType>, double, double, double, double);
+      using JSignature = JNativeHapticEvent(jni::alias_ref<JHapticEventType>, double, double, double, double, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JDouble>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -66,7 +95,16 @@ namespace margelo::nitro::munimhaptics {
         value.time,
         value.duration,
         value.intensity,
-        value.sharpness
+        value.sharpness,
+        value.attackTime.has_value() ? jni::JDouble::valueOf(value.attackTime.value()) : nullptr,
+        value.decayTime.has_value() ? jni::JDouble::valueOf(value.decayTime.value()) : nullptr,
+        value.releaseTime.has_value() ? jni::JDouble::valueOf(value.releaseTime.value()) : nullptr,
+        value.sustained.has_value() ? jni::JBoolean::valueOf(value.sustained.value()) : nullptr,
+        value.audioVolume.has_value() ? jni::JDouble::valueOf(value.audioVolume.value()) : nullptr,
+        value.audioPitch.has_value() ? jni::JDouble::valueOf(value.audioPitch.value()) : nullptr,
+        value.audioPan.has_value() ? jni::JDouble::valueOf(value.audioPan.value()) : nullptr,
+        value.audioBrightness.has_value() ? jni::JDouble::valueOf(value.audioBrightness.value()) : nullptr,
+        value.resource.has_value() ? jni::make_jstring(value.resource.value()) : nullptr
       );
     }
   };

@@ -18,8 +18,62 @@ public extension NativeHapticEvent {
   /**
    * Create a new instance of `NativeHapticEvent`.
    */
-  init(type: HapticEventType, time: Double, duration: Double, intensity: Double, sharpness: Double) {
-    self.init(type, time, duration, intensity, sharpness)
+  init(type: HapticEventType, time: Double, duration: Double, intensity: Double, sharpness: Double, attackTime: Double?, decayTime: Double?, releaseTime: Double?, sustained: Bool?, audioVolume: Double?, audioPitch: Double?, audioPan: Double?, audioBrightness: Double?, resource: String?) {
+    self.init(type, time, duration, intensity, sharpness, { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = attackTime {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = decayTime {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = releaseTime {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_bool_ in
+      if let __unwrappedValue = sustained {
+        return bridge.create_std__optional_bool_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = audioVolume {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = audioPitch {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = audioPan {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_double_ in
+      if let __unwrappedValue = audioBrightness {
+        return bridge.create_std__optional_double_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = resource {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+      } else {
+        return .init()
+      }
+    }())
   }
 
   @inline(__always)
@@ -45,5 +99,113 @@ public extension NativeHapticEvent {
   @inline(__always)
   var sharpness: Double {
     return self.__sharpness
+  }
+  
+  @inline(__always)
+  var attackTime: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__attackTime) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__attackTime)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var decayTime: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__decayTime) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__decayTime)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var releaseTime: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__releaseTime) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__releaseTime)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var sustained: Bool? {
+    return { () -> Bool? in
+      if bridge.has_value_std__optional_bool_(self.__sustained) {
+        let __unwrapped = bridge.get_std__optional_bool_(self.__sustained)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var audioVolume: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__audioVolume) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__audioVolume)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var audioPitch: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__audioPitch) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__audioPitch)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var audioPan: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__audioPan) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__audioPan)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var audioBrightness: Double? {
+    return { () -> Double? in
+      if bridge.has_value_std__optional_double_(self.__audioBrightness) {
+        let __unwrapped = bridge.get_std__optional_double_(self.__audioBrightness)
+        return __unwrapped
+      } else {
+        return nil
+      }
+    }()
+  }
+  
+  @inline(__always)
+  var resource: String? {
+    return { () -> String? in
+      if bridge.has_value_std__optional_std__string_(self.__resource) {
+        let __unwrapped = bridge.get_std__optional_std__string_(self.__resource)
+        return String(__unwrapped)
+      } else {
+        return nil
+      }
+    }()
   }
 }

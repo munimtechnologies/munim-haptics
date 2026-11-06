@@ -8,6 +8,7 @@
 #include "MunimHaptics-Swift-Cxx-Bridge.hpp"
 
 // Include C++ implementation defined types
+#include "HybridHapticPlayerSpecSwift.hpp"
 #include "HybridMunimHapticsSpecSwift.hpp"
 #include "MunimHaptics-Swift-Cxx-Umbrella.hpp"
 #include <NitroModules/NitroDefines.hpp>
@@ -27,6 +28,54 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
     auto swiftClosure = MunimHaptics::Func_void_std__exception_ptr::fromUnsafe(swiftClosureWrapper);
     return [swiftClosure = std::move(swiftClosure)](const std::exception_ptr& error) mutable -> void {
       swiftClosure.call(error);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const HapticPlayerCompletion& /* completion */)>
+  Func_void_HapticPlayerCompletion create_Func_void_HapticPlayerCompletion(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = MunimHaptics::Func_void_HapticPlayerCompletion::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const HapticPlayerCompletion& completion) mutable -> void {
+      swiftClosure.call(completion);
+    };
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridHapticPlayerSpec>
+  std::shared_ptr<HybridHapticPlayerSpec> create_std__shared_ptr_HybridHapticPlayerSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    MunimHaptics::HybridHapticPlayerSpec_cxx swiftPart = MunimHaptics::HybridHapticPlayerSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::munimhaptics::HybridHapticPlayerSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridHapticPlayerSpec_(std__shared_ptr_HybridHapticPlayerSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::munimhaptics::HybridHapticPlayerSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::munimhaptics::HybridHapticPlayerSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridHapticPlayerSpec\" is not implemented in Swift!");
+    }
+    #endif
+    MunimHaptics::HybridHapticPlayerSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::function<void(const std::string& /* result */)>
+  Func_void_std__string create_Func_void_std__string(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = MunimHaptics::Func_void_std__string::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::string& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const HapticEngineEvent& /* event */)>
+  Func_void_HapticEngineEvent create_Func_void_HapticEngineEvent(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = MunimHaptics::Func_void_HapticEngineEvent::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const HapticEngineEvent& event) mutable -> void {
+      swiftClosure.call(event);
+    };
+  }
+  
+  // pragma MARK: std::function<void(bool /* result */)>
+  Func_void_bool create_Func_void_bool(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = MunimHaptics::Func_void_bool::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](bool result) mutable -> void {
+      swiftClosure.call(result);
     };
   }
   

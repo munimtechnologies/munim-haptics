@@ -32,6 +32,8 @@
 namespace margelo::nitro::munimhaptics { enum class HapticEventType; }
 
 #include "HapticEventType.hpp"
+#include <optional>
+#include <string>
 
 namespace margelo::nitro::munimhaptics {
 
@@ -45,10 +47,19 @@ namespace margelo::nitro::munimhaptics {
     double duration     SWIFT_PRIVATE;
     double intensity     SWIFT_PRIVATE;
     double sharpness     SWIFT_PRIVATE;
+    std::optional<double> attackTime     SWIFT_PRIVATE;
+    std::optional<double> decayTime     SWIFT_PRIVATE;
+    std::optional<double> releaseTime     SWIFT_PRIVATE;
+    std::optional<bool> sustained     SWIFT_PRIVATE;
+    std::optional<double> audioVolume     SWIFT_PRIVATE;
+    std::optional<double> audioPitch     SWIFT_PRIVATE;
+    std::optional<double> audioPan     SWIFT_PRIVATE;
+    std::optional<double> audioBrightness     SWIFT_PRIVATE;
+    std::optional<std::string> resource     SWIFT_PRIVATE;
 
   public:
     NativeHapticEvent() = default;
-    explicit NativeHapticEvent(HapticEventType type, double time, double duration, double intensity, double sharpness): type(type), time(time), duration(duration), intensity(intensity), sharpness(sharpness) {}
+    explicit NativeHapticEvent(HapticEventType type, double time, double duration, double intensity, double sharpness, std::optional<double> attackTime, std::optional<double> decayTime, std::optional<double> releaseTime, std::optional<bool> sustained, std::optional<double> audioVolume, std::optional<double> audioPitch, std::optional<double> audioPan, std::optional<double> audioBrightness, std::optional<std::string> resource): type(type), time(time), duration(duration), intensity(intensity), sharpness(sharpness), attackTime(attackTime), decayTime(decayTime), releaseTime(releaseTime), sustained(sustained), audioVolume(audioVolume), audioPitch(audioPitch), audioPan(audioPan), audioBrightness(audioBrightness), resource(resource) {}
 
   public:
     friend bool operator==(const NativeHapticEvent& lhs, const NativeHapticEvent& rhs) = default;
@@ -68,7 +79,16 @@ namespace margelo::nitro {
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "time"))),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "duration"))),
         JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "intensity"))),
-        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sharpness")))
+        JSIConverter<double>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sharpness"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "attackTime"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "decayTime"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "releaseTime"))),
+        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sustained"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "audioVolume"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "audioPitch"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "audioPan"))),
+        JSIConverter<std::optional<double>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "audioBrightness"))),
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "resource")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::munimhaptics::NativeHapticEvent& arg) {
@@ -78,6 +98,15 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "duration"), JSIConverter<double>::toJSI(runtime, arg.duration));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "intensity"), JSIConverter<double>::toJSI(runtime, arg.intensity));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "sharpness"), JSIConverter<double>::toJSI(runtime, arg.sharpness));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "attackTime"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.attackTime));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "decayTime"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.decayTime));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "releaseTime"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.releaseTime));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "sustained"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.sustained));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "audioVolume"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.audioVolume));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "audioPitch"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.audioPitch));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "audioPan"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.audioPan));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "audioBrightness"), JSIConverter<std::optional<double>>::toJSI(runtime, arg.audioBrightness));
+      obj.setProperty(runtime, PropNameIDCache::get(runtime, "resource"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.resource));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -93,6 +122,15 @@ namespace margelo::nitro {
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "duration")))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "intensity")))) return false;
       if (!JSIConverter<double>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sharpness")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "attackTime")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "decayTime")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "releaseTime")))) return false;
+      if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "sustained")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "audioVolume")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "audioPitch")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "audioPan")))) return false;
+      if (!JSIConverter<std::optional<double>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "audioBrightness")))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "resource")))) return false;
       return true;
     }
   };

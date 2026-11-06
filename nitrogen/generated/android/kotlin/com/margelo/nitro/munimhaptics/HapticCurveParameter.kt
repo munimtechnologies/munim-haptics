@@ -17,7 +17,14 @@ import com.facebook.proguard.annotations.DoNotStrip
 @Keep
 enum class HapticCurveParameter(@DoNotStrip @Keep val value: Int) {
   INTENSITY(0),
-  SHARPNESS(1);
+  SHARPNESS(1),
+  ATTACKTIME(2),
+  DECAYTIME(3),
+  RELEASETIME(4),
+  AUDIOVOLUME(5),
+  AUDIOPAN(6),
+  AUDIOPITCH(7),
+  AUDIOBRIGHTNESS(8);
 
   companion object
 }

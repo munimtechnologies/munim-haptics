@@ -45,6 +45,107 @@ abstract class HybridMunimHapticsSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun stop(): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getCapabilities(): HapticCapabilities
+  
+  @DoNotStrip
+  @Keep
+  abstract fun impact(style: ImpactStyle, intensity: Double): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun notification(type: NotificationFeedbackType): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun selection(): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun prepareImpact(style: ImpactStyle): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun prepareNotification(): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun prepareSelection(): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun playAHAP(ahap: String): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun playAHAPFile(path: String): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun readTextFile(path: String): Promise<String>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun createPlayer(pattern: NativeHapticPattern): HybridHapticPlayerSpec
+  
+  @DoNotStrip
+  @Keep
+  abstract fun createPlayerFromAHAP(ahap: String): HybridHapticPlayerSpec
+  
+  @DoNotStrip
+  @Keep
+  abstract fun startEngine(): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun stopEngine(): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun setEngineOptions(options: HapticEngineOptions): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun getEngineState(): HapticEngineState
+  
+  abstract fun setEngineListener(listener: (event: HapticEngineEvent) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun setEngineListener_cxx(listener: Func_void_HapticEngineEvent): Unit {
+    val __result = setEngineListener(listener)
+    return __result
+  }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun vibrate(durationMs: Double, amplitude: Double, options: NativeVibrationOptions): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun playWaveform(timingsMs: DoubleArray, amplitudes: DoubleArray, repeatIndex: Double, options: NativeVibrationOptions): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun playPredefined(effect: AndroidPredefinedEffect, fallback: Boolean, options: NativeVibrationOptions): Promise<Boolean>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun playPrimitives(steps: Array<NativePrimitiveStep>, fallback: Boolean, options: NativeVibrationOptions): Promise<Boolean>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun playEnvelope(envelope: NativeHapticEnvelope, options: NativeVibrationOptions): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun performHapticFeedback(feedback: AndroidHapticFeedback, fallback: Boolean): Promise<Boolean>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun cancel(): Promise<Unit>
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {
