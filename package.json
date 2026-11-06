@@ -1,0 +1,123 @@
+{
+  "name": "munim-haptics",
+  "version": "0.1.0",
+  "description": "Rich, finely controlled haptic patterns for React Native: continuous vibration with intensity and sharpness curves plus transient taps at chosen times and strengths, on Core Haptics (iOS) and amplitude waveforms (Android), with Expo support",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -dfX",
+    "release": "semantic-release",
+    "build": "npm run typecheck && bob build",
+    "codegen": "nitrogen --logLevel=\"debug\" && npm run build && node post-script.js",
+    "release:local": "node scripts/release-local.mjs"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "haptics",
+    "haptic-feedback",
+    "vibration",
+    "core-haptics",
+    "chhapticengine",
+    "taptic-engine",
+    "vibration-effect",
+    "waveform",
+    "ios",
+    "android",
+    "typescript",
+    "nitro-modules",
+    "munim-technologies"
+  ],
+  "files": [
+    "src",
+    "react-native.config.js",
+    "lib",
+    "nitrogen",
+    "nitro.json",
+    "android/build.gradle",
+    "android/consumer-rules.pro",
+    "android/fix-prefab.gradle",
+    "android/gradle.properties",
+    "android/CMakeLists.txt",
+    "android/src",
+    "ios/**/*.h",
+    "ios/**/*.m",
+    "ios/**/*.mm",
+    "ios/**/*.cpp",
+    "ios/**/*.swift",
+    "app.plugin.js",
+    "*.podspec",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/munimtechnologies/munim-haptics.git"
+  },
+  "author": "sheehanmunim <support@munimtech.com> (https://github.com/sheehanmunim)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/munimtechnologies/munim-haptics/issues"
+  },
+  "homepage": "https://github.com/munimtechnologies/munim-haptics#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "expo": {
+    "name": "munim-haptics",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "install": {
+      "exclude": [
+        "react-native"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/react": "^19.3.0",
+    "conventional-changelog-conventionalcommits": "^9.3.1",
+    "nitrogen": "0.37.1",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
+    "react-native-builder-bob": "^0.43.1",
+    "react-native-nitro-modules": "0.37.1",
+    "semantic-release": "^25.0.9",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-nitro-modules": ">=0.36.5 <1"
+  },
+  "prettier": {
+    "quoteProps": "consistent",
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false,
+    "semi": false
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.json"
+        }
+      ]
+    ]
+  }
+}
