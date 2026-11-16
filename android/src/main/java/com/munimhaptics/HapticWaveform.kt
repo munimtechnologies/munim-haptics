@@ -9,6 +9,7 @@ import com.margelo.nitro.munimhaptics.NativeHapticEnvelope
 import com.margelo.nitro.munimhaptics.NativeHapticPattern
 import com.margelo.nitro.munimhaptics.NativePrimitiveStep
 import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -31,26 +32,22 @@ object HapticWaveform {
   private const val ON_OFF_THRESHOLD = 0.6
 
   class Waveform(val timings: LongArray, val amplitudes: IntArray) {
-    val isSilent: Boolean get() = amplitudes.all { it == 0 }
-    val durationMs: Long get() = timings.sum()
+    val isSilent: Boolean = amplitudes.all { it == 0 }
+    val durationMs: Long = timings.sum()
 
     /** The part between `fromMs` and `toMs`. */
     fun slice(fromMs: Long, toMs: Long): Waveform {
-      val timings = ArrayList<Long>()
-      val amplitudes = ArrayList<Int>()
+      val out = Builder(this.timings.size)
       var start = 0L
       for (index in this.timings.indices) {
         val end = start + this.timings[index]
         val from = max(start, fromMs)
         val to = min(end, toMs)
-        if (to > from) {
-          timings.add(to - from)
-          amplitudes.add(this.amplitudes[index])
-        }
+        if (to > from) out.add(to - from, this.amplitudes[index])
         start = end
         if (start >= toMs) break
       }
-      return Waveform(timings.toLongArray(), amplitudes.toIntArray())
+      return out.build()
     }
 
     /** Amplitudes times `multiplier` (0..1). */
@@ -68,6 +65,70 @@ object HapticWaveform {
 
     operator fun plus(other: Waveform): Waveform =
       Waveform(timings + other.timings, amplitudes + other.amplitudes)
+  }
+
+  /** Appends steps without boxing (no ArrayList<Long> / ArrayList<Int>). */
+  private class Builder(capacity: Int) {
+    private var timings = LongArray(max(4, capacity))
+    private var amplitudes = IntArray(max(4, capacity))
+    var size = 0
+      private set
+
+    fun add(timing: Long, amplitude: Int) {
+      if (size == timings.size) {
+        timings = timings.copyOf(size * 2)
+        amplitudes = amplitudes.copyOf(size * 2)
+      }
+      timings[size] = timing
+      amplitudes[size] = amplitude
+      size++
+    }
+
+    /** Adds a step, or lengthens the last one when it has the same amplitude. */
+    fun addMerging(timing: Long, amplitude: Int) {
+      if (size > 0 && amplitudes[size - 1] == amplitude) {
+        timings[size - 1] += timing
+      } else {
+        add(timing, amplitude)
+      }
+    }
+
+    fun build() = Waveform(timings.copyOf(size), amplitudes.copyOf(size))
+  }
+
+  /** An intensity curve with its points sorted once, for fast lookups. */
+  private class SortedCurve(curve: HapticCurve) {
+    val start = curve.time
+    private val times: DoubleArray
+    private val values: DoubleArray
+
+    init {
+      val points = curve.points.sortedBy { it.time }
+      times = DoubleArray(points.size) { points[it].time }
+      values = DoubleArray(points.size) { points[it].value }
+    }
+
+    val isEmpty: Boolean get() = times.isEmpty()
+    /** Pattern time (s) of the first point. */
+    val firstTime: Double get() = start + times[0]
+
+    /** The value at pattern time `time` (s), interpolated linearly. */
+    fun valueAt(time: Double): Double {
+      val local = time - start
+      if (local <= times[0]) return clamp01(values[0])
+      val last = times.size - 1
+      if (local >= times[last]) return clamp01(values[last])
+      // Binary search for the segment [a, b] that holds `local`.
+      var low = 0
+      var high = last
+      while (high - low > 1) {
+        val mid = (low + high) ushr 1
+        if (times[mid] < local) low = mid else high = mid
+      }
+      val span = times[high] - times[low]
+      val t = if (span <= 0.0) 1.0 else (local - times[low]) / span
+      return clamp01(values[low] + (values[high] - values[low]) * t)
+    }
   }
 
   // ─── Patterns ────────────────────────────────────────────────────────────
@@ -89,7 +150,9 @@ object HapticWaveform {
     if (steps <= 0) return Waveform(LongArray(0), IntArray(0))
 
     val levels = DoubleArray(steps)
-    val intensityCurves = pattern.curves.filter { it.parameter == HapticCurveParameter.INTENSITY }
+    // The intensity curves' multiplier at each step, worked out once for all
+    // events (not per event and step, re-sorting the points every time).
+    val multipliers = curveMultipliers(pattern.curves, steps)
 
     for (event in events) {
       if (event.type != HapticEventType.CONTINUOUS || event.duration <= 0.0) continue
@@ -99,10 +162,13 @@ object HapticWaveform {
       // they fade in / out over up to half of the event.
       val attack = clamp01(event.attackTime ?: 0.0) * event.duration / 2.0
       val release = clamp01(event.releaseTime ?: 0.0) * event.duration / 2.0
-      for (step in 0 until steps) {
+      // Only the steps whose midpoint falls inside the event.
+      val first = max(0, floor(start * 1000.0 / STEP_MS - 0.5).toInt())
+      val last = min(steps, ceil(end * 1000.0 / STEP_MS - 0.5).toInt() + 1)
+      for (step in first until last) {
         val mid = (step + 0.5) * STEP_MS / 1000.0
         if (mid < start || mid >= end) continue
-        var level = clamp01(event.intensity) * curveValue(intensityCurves, mid)
+        var level = clamp01(event.intensity) * (multipliers?.get(step) ?: 1.0)
         if (attack > 0.0 && mid - start < attack) level *= (mid - start) / attack
         if (release > 0.0 && end - mid < release) level *= (end - mid) / release
         if (!amplitudeControl) level = if (level >= ON_OFF_THRESHOLD) 1.0 else 0.0
@@ -211,18 +277,11 @@ object HapticWaveform {
 
   /** Levels (0..1) per `stepMs` slot, with equal neighbours merged. */
   private fun merge(levels: DoubleArray, stepMs: Long): Waveform {
-    val timings = ArrayList<Long>()
-    val amplitudes = ArrayList<Int>()
+    val out = Builder(min(levels.size, 64))
     for (level in levels) {
-      val amplitude = (clamp01(level) * 255.0).roundToInt()
-      if (amplitudes.isNotEmpty() && amplitudes.last() == amplitude) {
-        timings[timings.size - 1] = timings.last() + stepMs
-      } else {
-        timings.add(stepMs)
-        amplitudes.add(amplitude)
-      }
+      out.addMerging(stepMs, (clamp01(level) * 255.0).roundToInt())
     }
-    return Waveform(timings.toLongArray(), amplitudes.toIntArray())
+    return out.build()
   }
 
   /** Alternating off/on durations, starting with off, as the plain waveform APIs take. */
@@ -246,30 +305,28 @@ object HapticWaveform {
   private fun pulseMs(sharpness: Double): Double = 20.0 - 10.0 * clamp01(sharpness)
 
   /**
-   * The intensity multiplier at `time` (seconds): the latest curve that has
+   * The intensity multiplier at the midpoint of every step, or null when the
+   * pattern has no intensity curve. At each moment the latest curve that has
    * started wins; before its first point nothing changes (1), after its last
    * point it holds the last value.
    */
-  private fun curveValue(curves: List<HapticCurve>, time: Double): Double {
-    var active: HapticCurve? = null
-    for (curve in curves) {
-      val firstTime = curve.time + (curve.points.minOfOrNull { it.time } ?: continue)
-      if (firstTime <= time && (active == null || curve.time >= active.time)) active = curve
-    }
-    val curve = active ?: return 1.0
-    val points = curve.points.sortedBy { it.time }
-    val local = time - curve.time
-    if (local <= points.first().time) return clamp01(points.first().value)
-    for (index in 1 until points.size) {
-      val a = points[index - 1]
-      val b = points[index]
-      if (local <= b.time) {
-        val span = b.time - a.time
-        val t = if (span <= 0.0) 1.0 else (local - a.time) / span
-        return clamp01(a.value + (b.value - a.value) * t)
+  private fun curveMultipliers(curves: Array<HapticCurve>, steps: Int): DoubleArray? {
+    val sorted = curves.asSequence()
+      .filter { it.parameter == HapticCurveParameter.INTENSITY }
+      .map { SortedCurve(it) }
+      .filter { !it.isEmpty }
+      .toList()
+    if (sorted.isEmpty()) return null
+    val result = DoubleArray(steps)
+    for (step in 0 until steps) {
+      val time = (step + 0.5) * STEP_MS / 1000.0
+      var active: SortedCurve? = null
+      for (curve in sorted) {
+        if (curve.firstTime <= time && (active == null || curve.start >= active.start)) active = curve
       }
+      result[step] = active?.valueAt(time) ?: 1.0
     }
-    return clamp01(points.last().value)
+    return result
   }
 
   fun clamp01(value: Double): Double = if (value.isNaN()) 0.0 else min(1.0, max(0.0, value))

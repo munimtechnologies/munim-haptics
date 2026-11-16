@@ -10,6 +10,8 @@ import com.margelo.nitro.munimhaptics.HapticDynamicParameter
 import com.margelo.nitro.munimhaptics.HapticPlayerCompletion
 import com.margelo.nitro.munimhaptics.HybridHapticPlayerSpec
 import com.margelo.nitro.munimhaptics.NativeHapticPattern
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToLong
@@ -22,6 +24,10 @@ import kotlin.math.roundToLong
  *
  * Intensity works (sendParameters and intensity curves); sharpness, the
  * envelope parameters and audio don't exist on Android vibrators.
+ *
+ * Immediate intensity changes are coalesced: a gesture sending 120 updates a
+ * second re-issues the waveform at most once per frame (16 ms), with the
+ * latest value, and not at all when the amplitude would not change.
  *
  * All state below the volatile settings lives on the main thread.
  */
@@ -53,6 +59,11 @@ class HybridHapticPlayer(pattern: NativeHapticPattern) : HybridHapticPlayerSpec(
   /** Pattern position (ms) at `anchor`. */
   private var positionMs = 0.0
   private var anchor = 0L
+
+  /** The latest immediate intensity, applied by one pending re-issue. */
+  @Volatile private var pendingIntensity = 1.0
+  private val reissuePosted = AtomicBoolean(false)
+  private var lastReissue = 0L
 
   private val completion = Runnable {
     playing = false
@@ -125,6 +136,7 @@ class HybridHapticPlayer(pattern: NativeHapticPattern) : HybridHapticPlayerSpec(
 
   override fun cancel(): Promise<Unit> {
     handler.removeCallbacksAndMessages(token)
+    reissuePosted.set(false)
     return schedule(0.0) {
       val wasPlaying = playing
       halt()
@@ -136,10 +148,33 @@ class HybridHapticPlayer(pattern: NativeHapticPattern) : HybridHapticPlayerSpec(
   override fun sendParameters(parameters: Array<HapticDynamicParameter>, atTime: Double): Promise<Unit> {
     val value = parameters.lastOrNull { it.parameter == HapticCurveParameter.INTENSITY }?.value
       ?: return Promise.resolved(Unit)
-    return schedule(atTime) {
-      val position = currentPositionMs()
-      intensity = HapticWaveform.clamp01(value)
-      if (playing) playFrom(position)
+    if (atTime.isFinite() && atTime > 0.0) {
+      return schedule(atTime) { applyIntensity(HapticWaveform.clamp01(value)) }
+    }
+    pendingIntensity = HapticWaveform.clamp01(value)
+    if (reissuePosted.compareAndSet(false, true)) {
+      val now = SystemClock.uptimeMillis()
+      val at = max(now, lastReissue + MIN_REISSUE_INTERVAL_MS)
+      handler.postAtTime({
+        reissuePosted.set(false)
+        try {
+          applyIntensity(pendingIntensity)
+        } catch (error: Throwable) {
+          notifyCompletion(error.message ?: error.toString())
+        }
+      }, token, at)
+    }
+    return Promise.resolved(Unit)
+  }
+
+  /** Main thread. Re-issues the waveform only when the amplitude changes. */
+  private fun applyIntensity(value: Double) {
+    if (abs(value - intensity) < 0.5 / 255.0) return
+    val position = currentPositionMs()
+    intensity = value
+    if (playing) {
+      playFrom(position)
+      lastReissue = SystemClock.uptimeMillis()
     }
   }
 
@@ -235,5 +270,19 @@ class HybridHapticPlayer(pattern: NativeHapticPattern) : HybridHapticPlayerSpec(
 
   private fun notifyCompletion(error: String = "") {
     listener?.invoke(HapticPlayerCompletion(error))
+  }
+
+  /** Drops everything scheduled and stops the vibration if this player is playing. */
+  override fun dispose() {
+    handler.removeCallbacksAndMessages(token)
+    handler.removeCallbacks(completion)
+    reissuePosted.set(false)
+    listener = null
+    handler.post { halt() }
+    super.dispose()
+  }
+
+  private companion object {
+    const val MIN_REISSUE_INTERVAL_MS = 16L
   }
 }
