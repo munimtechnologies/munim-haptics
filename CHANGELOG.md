@@ -1,3 +1,28 @@
+## [0.3.0](https://github.com/munimtechnologies/munim-haptics/compare/v0.2.0...v0.3.0) (2026-11-16)
+
+### ✨ Features
+
+* compiled patterns, presets, real-time haptics and honest capabilities ([7789de5](https://github.com/munimtechnologies/munim-haptics/commit/7789de58a8c875294928b594045d1c22f4d7c1f0))
+* **example:** Expo example app, CI and native build workflows ([3d1d807](https://github.com/munimtechnologies/munim-haptics/commit/3d1d8077ada053c7244c01fba6b73fd29f938c2e))
+
+### 🐛 Bug Fixes
+
+* **ios:** read the engine generation without self before init completes ([1469b4d](https://github.com/munimtechnologies/munim-haptics/commit/1469b4d8e7a46d95d7d9c0f5be265377d596c2fc))
+
+### 💨 Performance Improvements
+
+* **android:** faster waveform sampling and coalesced live intensity changes ([a6eacb1](https://github.com/munimtechnologies/munim-haptics/commit/a6eacb1829fe651b13d0976ecda41e16672b4d29))
+
+### 📚 Documentation
+
+* presets, compiled patterns, real-time haptics, iPad capabilities and the example app ([28a5e15](https://github.com/munimtechnologies/munim-haptics/commit/28a5e1571811d12ee149ac2d0b4c469786b4c89c))
+
+### 🛠️ Other changes
+
+* **deps:** React Native 0.88.1, Nitro 0.37.2, Expo SDK 58 example workspace, TypeScript 6, ESLint 10, semantic-release 26 ([57dd863](https://github.com/munimtechnologies/munim-haptics/commit/57dd8638458bbc28877559a0f64965cdc1b6065b))
+* regenerate nitrogen 0.37.2 bindings and lockfile ([1861051](https://github.com/munimtechnologies/munim-haptics/commit/186105142960f9824b335a14db6830d831c5e553))
+* regenerate nitrogen bindings for compiled patterns and new capabilities ([c5e6d8d](https://github.com/munimtechnologies/munim-haptics/commit/c5e6d8d977176640ad19a28f4713ce3341c902f2))
+
 ## 0.2.0 (2026-11-06)
 
 A complete haptics library: everything iOS and Android offer apps, behind

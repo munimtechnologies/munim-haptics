@@ -1,6 +1,6 @@
 {
   "name": "munim-haptics",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Complete haptics for React Native: iOS feedback generators, Core Haptics patterns, AHAP, audio and advanced players; Android predefined effects, primitives, envelopes, waveforms and view haptic feedback; one cross-platform API, built on Nitro Modules, with Expo support",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
