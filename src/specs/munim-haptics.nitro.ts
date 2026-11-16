@@ -226,6 +226,13 @@ export interface AndroidEffectInfo {
   support: AndroidEffectSupport
 }
 
+/** One point of the vibrator's frequency response (Android 16+). */
+export interface FrequencyResponsePoint {
+  frequencyHz: number
+  /** Output acceleration the vibrator reaches at this frequency, in g. */
+  outputAccelerationGs: number
+}
+
 export interface HapticCapabilities {
   /** 'ios' or 'android'. */
   platform: string
@@ -236,6 +243,13 @@ export interface HapticCapabilities {
 
   /** iOS: Core Haptics. Android: a vibrator. */
   supportsHaptics: boolean
+  /**
+   * Whether `impact` / `notification` / `selection` are felt on this device.
+   * iOS: the device has a Taptic Engine the feedback generators drive (iPhone;
+   * false on iPad, iPod touch, Mac and the simulator, where they do nothing).
+   * Android: the device has a vibrator.
+   */
+  supportsFeedback: boolean
   /** iOS: Core Haptics audio. Android: false. */
   supportsAudio: boolean
   /** Rich `playPattern` (iOS: Core Haptics; Android: amplitude control). */
@@ -269,6 +283,12 @@ export interface HapticCapabilities {
   minFrequencyHz?: number
   maxFrequencyHz?: number
   maxOutputAccelerationGs?: number
+  /**
+   * Android 16+: output acceleration per frequency, from
+   * `VibratorFrequencyProfile.getFrequenciesOutputAcceleration()`. Empty when
+   * the vibrator has no frequency profile.
+   */
+  frequencyResponse: FrequencyResponsePoint[]
 
   /** Android 12+: VibratorManager ids. Empty elsewhere. */
   vibratorIds: number[]
@@ -361,6 +381,22 @@ export interface HapticPlayer
   ): void
 }
 
+/**
+ * A pattern converted once into the platform's own form, so playing it again
+ * costs no conversion and no bridge copy. iOS: Core Haptics patterns and
+ * their players, built once (rebuilt only after the haptic server resets).
+ * Android: one `VibrationEffect` waveform.
+ */
+export interface CompiledHapticPattern
+  extends HybridObject<{ ios: 'swift'; android: 'kotlin' }> {
+  /** Seconds. */
+  readonly duration: number
+  /** Plays it, replacing any pattern still playing. Resolves once it has started. */
+  play(): Promise<void>
+  /** Stops it if it is playing (Android: cancels the vibration). */
+  stop(): Promise<void>
+}
+
 export interface MunimHaptics
   extends HybridObject<{ ios: 'swift'; android: 'kotlin' }> {
   // ── 0.1.0 ──
@@ -400,6 +436,10 @@ export interface MunimHaptics
   createPlayer(pattern: NativeHapticPattern): HapticPlayer
   /** iOS only (Android parses AHAP in JS and calls createPlayer). */
   createPlayerFromAHAP(ahap: string): HapticPlayer
+  /** Builds the pattern natively once; see `CompiledHapticPattern`. */
+  compilePattern(pattern: NativeHapticPattern): CompiledHapticPattern
+  /** iOS only (Android parses AHAP in JS and calls compilePattern). */
+  compileAHAP(ahap: string): CompiledHapticPattern
 
   // ── Core Haptics engine ──
   startEngine(): Promise<void>

@@ -1,0 +1,72 @@
+name: Build iOS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ios-build.yml'
+      - 'src/**'
+      - 'example/**'
+      - 'nitrogen/**'
+      - 'ios/**'
+      - 'app.plugin.js'
+      - 'nitro.json'
+      - 'package*.json'
+      - '*.podspec'
+  pull_request:
+    paths:
+      - '.github/workflows/ios-build.yml'
+      - 'src/**'
+      - 'example/**'
+      - 'nitrogen/**'
+      - 'ios/**'
+      - 'app.plugin.js'
+      - 'nitro.json'
+      - 'package*.json'
+      - '*.podspec'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build iOS example app
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npx expo prebuild --clean --platform ios --no-install
+        working-directory: example
+      - name: Cache CocoaPods
+        uses: actions/cache@v6
+        with:
+          path: ~/.cocoapods/repos
+          key: ${{ runner.os }}-cocoapods-${{ hashFiles('package-lock.json', '*.podspec') }}
+      - run: pod install
+        working-directory: example/ios
+      - name: Build iOS example
+        working-directory: example/ios
+        run: |
+          xcodebuild \
+            -workspace MunimHapticsExample.xcworkspace \
+            -scheme MunimHapticsExample \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build > build.log 2>&1 || {
+              grep -E 'error:|fatal error|BUILD FAILED' build.log | head -n 150
+              tail -n 80 build.log
+              exit 1
+            }
+          tail -n 5 build.log

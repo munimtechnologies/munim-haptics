@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
 import { NitroModules } from 'react-native-nitro-modules'
 import type {
+  CompiledHapticPattern as NativeCompiledPattern,
   HapticPlayer as NativeHapticPlayer,
   MunimHaptics as MunimHapticsSpec,
   NativeVibrationOptions,
@@ -25,9 +26,12 @@ import {
   parameterMin,
   patternDuration,
 } from './pattern'
+import { getPresetPattern, presetNames } from './presets'
+import type { HapticPresetName } from './presets'
 import type {
   AndroidHapticFeedback,
   AndroidPredefinedEffect,
+  CompiledHapticPattern,
   FallbackOptions,
   HapticCapabilities,
   HapticCurve,
@@ -41,13 +45,16 @@ import type {
   HapticPlayerParameters,
   ImpactStyle,
   NotificationFeedbackType,
+  PlayPatternOptions,
   PrimitiveStep,
+  RealtimeHaptic,
   VibrationOptions,
 } from './types'
 
 export * from './types'
 export type * from './ahap'
-export { buildAHAP, parseAHAP, normalizePattern }
+export type { HapticPresetName }
+export { buildAHAP, parseAHAP, normalizePattern, getPresetPattern, presetNames }
 
 // ─── Native module ─────────────────────────────────────────────────────────
 
@@ -77,6 +84,10 @@ async function call<T>(fallback: T, fn: (module: MunimHapticsSpec) => Promise<T>
   return fn(module)
 }
 
+// Hardware answers, asked once: they don't change while the app runs.
+let supportedCache: boolean | undefined
+let hardwareCache: { hasVibrator: boolean; supportsFeedback: boolean } | undefined
+
 // ─── 0.1.0 API ─────────────────────────────────────────────────────────────
 
 /**
@@ -85,13 +96,32 @@ async function call<T>(fallback: T, fn: (module: MunimHapticsSpec) => Promise<T>
  * so fall back to `impact` / `notification` / `selection`.
  */
 export function isSupported(): boolean {
+  if (supportedCache !== undefined) return supportedCache
   const module = getNative()
-  if (!module) return false
+  if (!module) return (supportedCache = false)
   try {
-    return module.isSupported()
+    supportedCache = module.isSupported()
   } catch {
-    return false
+    supportedCache = false
   }
+  return supportedCache
+}
+
+function hardware(): { hasVibrator: boolean; supportsFeedback: boolean } {
+  if (!hardwareCache) {
+    const { hasVibrator, supportsFeedback } = getCapabilities()
+    hardwareCache = { hasVibrator, supportsFeedback }
+  }
+  return hardwareCache
+}
+
+/**
+ * Whether a pattern plays: Core Haptics on iOS; on Android amplitude
+ * control, or (with `fallback`) any vibrator, as on / off pulses.
+ */
+function canPlayPatterns(options?: PlayPatternOptions): boolean {
+  if (isSupported()) return true
+  return !isIOS && options?.fallback === true && hardware().hasVibrator
 }
 
 /** Starts the haptic engine ahead of time, so the next pattern plays with no lag. */
@@ -102,11 +132,98 @@ export async function prepare(): Promise<void> {
 
 /**
  * Plays a pattern, replacing any pattern still playing. Resolves once it has
- * started (not when it ends). Does nothing when unsupported.
+ * started (not when it ends). Does nothing when unsupported (see
+ * `PlayPatternOptions.fallback` for Android vibrators without amplitude
+ * control). To play the same pattern often, `compilePattern` it once.
  */
-export async function playPattern(pattern: HapticPattern): Promise<void> {
-  if (!isSupported()) return
+export async function playPattern(pattern: HapticPattern, options?: PlayPatternOptions): Promise<void> {
+  if (!canPlayPatterns(options)) return
   await getNative()?.playPattern(normalizePattern(pattern))
+}
+
+// ─── Compiled patterns ─────────────────────────────────────────────────────
+
+class CompiledHandle implements CompiledHapticPattern {
+  constructor(private readonly compiled: NativeCompiledPattern) {}
+  get duration(): number {
+    return this.compiled.duration
+  }
+  play() {
+    return this.compiled.play()
+  }
+  stop() {
+    return this.compiled.stop()
+  }
+  release() {
+    this.compiled.dispose()
+  }
+}
+
+/** Stands in on web and unsupported devices: nothing plays. */
+class NoopCompiled implements CompiledHapticPattern {
+  constructor(readonly duration: number) {}
+  play() {
+    return Promise.resolve()
+  }
+  stop() {
+    return Promise.resolve()
+  }
+  release() {}
+}
+
+/**
+ * Converts a pattern into the platform's own form once (iOS: Core Haptics
+ * patterns and players; Android: a `VibrationEffect`), so every `play()`
+ * skips normalization, the bridge copy of the events and the native
+ * conversion. Returns a no-op pattern where patterns can't play.
+ */
+export function compilePattern(pattern: HapticPattern, options?: PlayPatternOptions): CompiledHapticPattern {
+  const module = getNative()
+  const normalized = normalizePattern(pattern)
+  if (!module || !canPlayPatterns(options) || normalized.events.length === 0) {
+    return new NoopCompiled(patternDuration(pattern))
+  }
+  return new CompiledHandle(module.compilePattern(normalized))
+}
+
+/** `compilePattern` for an AHAP document. iOS: native (audio included). Android: the parsed pattern. */
+export function compileAHAP(ahap: string | AHAP, options?: PlayPatternOptions): CompiledHapticPattern {
+  const module = getNative()
+  if (!module || !canPlayPatterns(options)) return new NoopCompiled(0)
+  if (isIOS) return new CompiledHandle(module.compileAHAP(ahapText(ahap)))
+  return compilePattern(parseAHAP(ahap), options)
+}
+
+// ─── Presets ───────────────────────────────────────────────────────────────
+
+const compiledPresets = new Map<HapticPresetName, CompiledHapticPattern>()
+
+function compiledPreset(name: HapticPresetName): CompiledHapticPattern {
+  let compiled = compiledPresets.get(name)
+  if (!compiled) {
+    compiled = compilePattern(getPresetPattern(name), { fallback: true })
+    compiledPresets.set(name, compiled)
+  }
+  return compiled
+}
+
+/**
+ * Plays a ready-made pattern (see `presetNames`). Each preset is compiled
+ * the first time it plays (or in `preloadPresets`) and replayed from the
+ * native copy after that. On Android vibrators without amplitude control
+ * presets play as on / off pulses. Resolves whether something played
+ * (false on devices without haptics, such as iPads).
+ */
+export async function playPreset(name: HapticPresetName): Promise<boolean> {
+  if (!canPlayPatterns({ fallback: true })) return false
+  await compiledPreset(name).play()
+  return true
+}
+
+/** Compiles presets ahead of time (all of them by default) so their first play is as fast as the rest. */
+export function preloadPresets(names: HapticPresetName[] = presetNames): void {
+  if (!canPlayPatterns({ fallback: true })) return
+  for (const name of names) compiledPreset(name)
 }
 
 /** Stops the pattern that is playing, if any. */
@@ -122,6 +239,7 @@ const NO_CAPABILITIES: HapticCapabilities = {
   osVersion: String(Platform.Version ?? ''),
   apiLevel: 0,
   supportsHaptics: false,
+  supportsFeedback: false,
   supportsAudio: false,
   supportsPatterns: false,
   hasVibrator: false,
@@ -131,6 +249,7 @@ const NO_CAPABILITIES: HapticCapabilities = {
   primitives: [],
   effects: [],
   supportsEnvelopeEffects: false,
+  frequencyResponse: [],
   vibratorIds: [],
 }
 
@@ -185,7 +304,10 @@ export async function prepareSelection(): Promise<void> {
   await call(undefined, (module) => module.prepareSelection())
 }
 
+/** iOS stand-ins for Android calls: resolves whether something was felt. */
 async function runFeedback(feedback: FeedbackCall): Promise<boolean> {
+  // UIKit's generators silently do nothing without a Taptic Engine (iPad).
+  if (feedback.kind !== 'none' && feedback.kind !== 'pattern' && !hardware().supportsFeedback) return false
   switch (feedback.kind) {
     case 'impact':
       await impact(feedback.style, feedback.intensity)
@@ -320,6 +442,9 @@ class PlayerHandle implements HapticPlayer {
   onComplete(listener: (error?: string) => void) {
     this.player.setCompletionListener((completion) => listener(completion.error || undefined))
   }
+  release() {
+    this.player.dispose()
+  }
 }
 
 /** Stands in on web and unsupported devices: every call resolves, nothing plays. */
@@ -354,11 +479,12 @@ class NoopPlayer implements HapticPlayer {
     return Promise.resolve()
   }
   onComplete() {}
+  release() {}
 }
 
 function canCreatePlayers(): boolean {
   if (isIOS) return isSupported()
-  return getCapabilities().hasVibrator
+  return hardware().hasVibrator
 }
 
 /**
@@ -384,6 +510,83 @@ export function createPlayerFromAHAP(ahap: string | AHAP): HapticPlayer {
 export async function createPlayerFromAHAPFile(path: string): Promise<HapticPlayer> {
   if (!getNative() || !canCreatePlayers()) return new NoopPlayer(0)
   return createPlayerFromAHAP(await readTextFile(path))
+}
+
+// ─── Real-time haptics ─────────────────────────────────────────────────────
+
+/** Core Haptics' longest continuous event; the player loops it. */
+const REALTIME_SPAN = 30
+/** The event's own sharpness; `set` moves it with the sharpness control (an offset). */
+const REALTIME_BASE_SHARPNESS = 0.5
+
+class Realtime implements RealtimeHaptic {
+  private player: HapticPlayer | null = null
+
+  get isActive(): boolean {
+    return this.player !== null
+  }
+
+  async start(intensity = 1, sharpness = REALTIME_BASE_SHARPNESS): Promise<void> {
+    if (this.player || !canCreatePlayers()) return
+    const player = createPlayer({
+      events: [
+        {
+          type: 'continuous',
+          time: 0,
+          duration: REALTIME_SPAN,
+          intensity: 1,
+          sharpness: REALTIME_BASE_SHARPNESS,
+        },
+      ],
+    })
+    player.loopEnabled = true
+    this.player = player
+    // Android applies this before the first waveform plays.
+    this.set(intensity, sharpness)
+    try {
+      await player.start()
+      // Core Haptics takes dynamic parameters once the player runs.
+      if (isIOS) this.set(intensity, sharpness)
+    } catch (error) {
+      this.player = null
+      player.release()
+      throw error
+    }
+  }
+
+  set(intensity: number, sharpness?: number): void {
+    const player = this.player
+    if (!player) return
+    const parameters: HapticDynamicParameter[] = [{ parameter: 'intensity', value: clamp(intensity, 0, 1) }]
+    if (isIOS && sharpness !== undefined) {
+      parameters.push({ parameter: 'sharpness', value: clamp(sharpness, 0, 1) - REALTIME_BASE_SHARPNESS })
+    }
+    // Fire and forget: a gesture calls this every frame.
+    player.sendParameters(parameters).catch(() => {})
+  }
+
+  async stop(): Promise<void> {
+    const player = this.player
+    this.player = null
+    if (!player) return
+    try {
+      await player.stop()
+    } finally {
+      player.release()
+    }
+  }
+}
+
+/**
+ * A vibration you steer live, e.g. from a pan gesture or a slider:
+ * `start()`, then `set(intensity, sharpness)` as often as you like, then
+ * `stop()`. iOS: one looping Core Haptics continuous event driven by the
+ * intensity and sharpness controls. Android: a looping waveform whose
+ * amplitude follows `set` (re-issued at most once per frame; no
+ * sharpness). Does nothing on devices without haptics.
+ */
+export function createRealtimeHaptic(): RealtimeHaptic {
+  return new Realtime()
 }
 
 // ─── Core Haptics engine (iOS; no-ops elsewhere) ───────────────────────────
@@ -573,6 +776,13 @@ export default {
   playPattern,
   stop,
   normalizePattern,
+  compilePattern,
+  compileAHAP,
+  playPreset,
+  preloadPresets,
+  presetNames,
+  getPresetPattern,
+  createRealtimeHaptic,
   getCapabilities,
   impact,
   notification,

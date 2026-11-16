@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Package checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run codegen
+      - name: Verify generated bindings are committed
+        run: |
+          git add --intent-to-add nitrogen
+          git diff --exit-code -- nitrogen
+      - run: npm run typecheck
+      - run: npm run typecheck:example
+      - run: npm run lint
+      - run: npm test
+      - run: npx bob build
+      - name: Expo config plugin loads
+        run: node -e "const plugin = require('./app.plugin.js'); if (typeof plugin !== 'function') process.exit(1)"
+      - name: Validate Expo prebuild configuration
+        run: npx expo config --type prebuild
+        working-directory: example
+      - name: Inspect npm package contents
+        run: npm pack --dry-run

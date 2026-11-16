@@ -21,18 +21,25 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup Node.js
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        # semantic-release 26 needs Node 26.13 or newer.
+        uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 26
           registry-url: https://registry.npmjs.org
           cache: npm
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
+
+      - name: Verify generated bindings
+        run: |
+          npm run codegen
+          git add --intent-to-add nitrogen
+          git diff --exit-code -- nitrogen
 
       - name: Build lib
         run: npm run build

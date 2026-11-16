@@ -16,6 +16,7 @@ import com.margelo.nitro.munimhaptics.AndroidPredefinedEffect
 import com.margelo.nitro.munimhaptics.AndroidPrimitive
 import com.margelo.nitro.munimhaptics.AndroidPrimitiveInfo
 import com.margelo.nitro.munimhaptics.AndroidVibrationUsage
+import com.margelo.nitro.munimhaptics.FrequencyResponsePoint
 import com.margelo.nitro.munimhaptics.HapticCapabilities
 import com.margelo.nitro.munimhaptics.NativeVibrationOptions
 
@@ -37,10 +38,14 @@ object VibratorHost {
     }
   }
 
-  val hasVibrator: Boolean get() = vibrator?.hasVibrator() == true
+  // Hardware facts never change while the app runs: each is asked once (on
+  // older Android every question is a binder call to the vibrator service).
 
-  val hasAmplitudeControl: Boolean
-    get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && vibrator?.hasAmplitudeControl() == true
+  val hasVibrator: Boolean by lazy { vibrator?.hasVibrator() == true }
+
+  val hasAmplitudeControl: Boolean by lazy {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && vibrator?.hasAmplitudeControl() == true
+  }
 
   /** Plain vibration, no attributes (how 0.1.0 played patterns). */
   val defaultOptions = NativeVibrationOptions(AndroidVibrationUsage.UNKNOWN, DoubleArray(0))
@@ -187,11 +192,30 @@ object VibratorHost {
     }
   }
 
-  fun isPrimitiveSupported(primitive: AndroidPrimitive): Boolean {
-    val id = primitiveId(primitive) ?: return false
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
-    return vibrator?.arePrimitivesSupported(id)?.firstOrNull() == true
+  /** Every primitive's support, from one `arePrimitivesSupported` call. */
+  private val primitiveSupport: Map<AndroidPrimitive, Boolean> by lazy {
+    val vibrator = vibrator
+    val known = AndroidPrimitive.values().mapNotNull { primitive -> primitiveId(primitive)?.let { primitive to it } }
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || vibrator == null || known.isEmpty()) {
+      return@lazy emptyMap()
+    }
+    val supported = vibrator.arePrimitivesSupported(*known.map { it.second }.toIntArray())
+    known.mapIndexed { index, pair -> pair.first to (supported.getOrNull(index) == true) }.toMap()
   }
+
+  /** Every supported primitive's length (ms), from one `getPrimitiveDurations` call (API 31+). */
+  private val primitiveDurations: Map<AndroidPrimitive, Int> by lazy {
+    val vibrator = vibrator
+    val known = AndroidPrimitive.values().filter { primitiveSupport[it] == true }
+      .mapNotNull { primitive -> primitiveId(primitive)?.let { primitive to it } }
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || vibrator == null || known.isEmpty()) {
+      return@lazy emptyMap()
+    }
+    val durations = vibrator.getPrimitiveDurations(*known.map { it.second }.toIntArray())
+    known.mapIndexed { index, pair -> pair.first to (durations.getOrNull(index) ?: 0) }.toMap()
+  }
+
+  fun isPrimitiveSupported(primitive: AndroidPrimitive): Boolean = primitiveSupport[primitive] == true
 
   /** `VibrationEffect.EFFECT_*`, or null before Android 10. */
   fun effectId(effect: AndroidPredefinedEffect): Int? {
@@ -204,33 +228,62 @@ object VibratorHost {
     }
   }
 
-  fun effectSupport(effect: AndroidPredefinedEffect): AndroidEffectSupport {
-    val id = effectId(effect) ?: return AndroidEffectSupport.UNSUPPORTED
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return AndroidEffectSupport.UNKNOWN
-    return when (vibrator?.areEffectsSupported(id)?.firstOrNull()) {
-      Vibrator.VIBRATION_EFFECT_SUPPORT_YES -> AndroidEffectSupport.SUPPORTED
-      Vibrator.VIBRATION_EFFECT_SUPPORT_NO -> AndroidEffectSupport.UNSUPPORTED
-      else -> AndroidEffectSupport.UNKNOWN
+  /** Every predefined effect's support, from one `areEffectsSupported` call (API 30+). */
+  private val effectSupportCache: Map<AndroidPredefinedEffect, AndroidEffectSupport> by lazy {
+    val known = AndroidPredefinedEffect.values().mapNotNull { effect -> effectId(effect)?.let { effect to it } }
+    val missing = AndroidPredefinedEffect.values().filter { effectId(it) == null }
+      .associateWith { AndroidEffectSupport.UNSUPPORTED }
+    val vibrator = vibrator
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || vibrator == null || known.isEmpty()) {
+      return@lazy missing + known.associate { it.first to AndroidEffectSupport.UNKNOWN }
     }
+    val answers = vibrator.areEffectsSupported(*known.map { it.second }.toIntArray())
+    missing + known.mapIndexed { index, pair ->
+      pair.first to when (answers.getOrNull(index)) {
+        Vibrator.VIBRATION_EFFECT_SUPPORT_YES -> AndroidEffectSupport.SUPPORTED
+        Vibrator.VIBRATION_EFFECT_SUPPORT_NO -> AndroidEffectSupport.UNSUPPORTED
+        else -> AndroidEffectSupport.UNKNOWN
+      }
+    }.toMap()
   }
 
-  val supportsEnvelopeEffects: Boolean
-    get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA && vibrator?.areEnvelopeEffectsSupported() == true
+  fun effectSupport(effect: AndroidPredefinedEffect): AndroidEffectSupport =
+    effectSupportCache[effect] ?: AndroidEffectSupport.UNSUPPORTED
+
+  val supportsEnvelopeEffects: Boolean by lazy {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA && vibrator?.areEnvelopeEffectsSupported() == true
+  }
 
   // ─── Capabilities ────────────────────────────────────────────────────────
 
+  /**
+   * Everything but the touch-feedback setting (which the user can change at
+   * any time), worked out once.
+   */
+  private val hardwareCapabilities: HapticCapabilities by lazy { readCapabilities() }
+
   fun capabilities(): HapticCapabilities {
+    // Deprecated for writing (apps should use View feedback), still the
+    // only way to read the user's touch-feedback setting.
+    @Suppress("DEPRECATION")
+    val feedbackEnabled = context?.let {
+      try {
+        Settings.System.getInt(it.contentResolver, Settings.System.HAPTIC_FEEDBACK_ENABLED, 1) != 0
+      } catch (_: Throwable) {
+        null
+      }
+    }
+    return hardwareCapabilities.copy(hapticFeedbackEnabled = feedbackEnabled)
+  }
+
+  private fun readCapabilities(): HapticCapabilities {
     val vibrator = vibrator
-    val hasVibrator = vibrator?.hasVibrator() == true
+    val hasVibrator = hasVibrator
     val sdk = Build.VERSION.SDK_INT
 
     val primitives = AndroidPrimitive.values().map { primitive ->
       val supported = hasVibrator && isPrimitiveSupported(primitive)
-      var duration = 0.0
-      val id = primitiveId(primitive)
-      if (supported && id != null && sdk >= Build.VERSION_CODES.S) {
-        duration = (vibrator.getPrimitiveDurations(id).firstOrNull() ?: 0).toDouble()
-      }
+      val duration = if (supported) (primitiveDurations[primitive] ?: 0).toDouble() else 0.0
       AndroidPrimitiveInfo(primitive, supported, duration)
     }
     val effects = AndroidPredefinedEffect.values().map { effect ->
@@ -252,8 +305,9 @@ object VibratorHost {
     var minFrequency: Double? = null
     var maxFrequency: Double? = null
     var maxAcceleration: Double? = null
+    var response = emptyArray<FrequencyResponsePoint>()
     if (sdk >= Build.VERSION_CODES.BAKLAVA && vibrator != null) {
-      envelope = vibrator.areEnvelopeEffectsSupported()
+      envelope = supportsEnvelopeEffects
       if (envelope) {
         val info = vibrator.envelopeEffectInfo
         maxPoints = info.maxSize.toDouble()
@@ -266,6 +320,10 @@ object VibratorHost {
         minFrequency = profile.minFrequencyHz.toDouble()
         maxFrequency = profile.maxFrequencyHz.toDouble()
         maxAcceleration = profile.maxOutputAccelerationGs.toDouble()
+        val table = profile.frequenciesOutputAcceleration
+        response = Array(table.size()) { index ->
+          FrequencyResponsePoint(table.keyAt(index).toDouble(), table.valueAt(index).toDouble())
+        }
       }
     }
 
@@ -273,22 +331,12 @@ object VibratorHost {
       manager?.vibratorIds?.map { it.toDouble() }?.toDoubleArray() ?: DoubleArray(0)
     } else DoubleArray(0)
 
-    // Deprecated for writing (apps should use View feedback), still the
-    // only way to read the user's touch-feedback setting.
-    @Suppress("DEPRECATION")
-    val feedbackEnabled = context?.let {
-      try {
-        Settings.System.getInt(it.contentResolver, Settings.System.HAPTIC_FEEDBACK_ENABLED, 1) != 0
-      } catch (_: Throwable) {
-        null
-      }
-    }
-
     return HapticCapabilities(
       platform = "android",
       osVersion = Build.VERSION.RELEASE ?: "",
       apiLevel = sdk.toDouble(),
       supportsHaptics = hasVibrator,
+      supportsFeedback = hasVibrator,
       supportsAudio = false,
       supportsPatterns = hasVibrator && hasAmplitudeControl,
       hasVibrator = hasVibrator,
@@ -307,8 +355,9 @@ object VibratorHost {
       minFrequencyHz = minFrequency,
       maxFrequencyHz = maxFrequency,
       maxOutputAccelerationGs = maxAcceleration,
+      frequencyResponse = response,
       vibratorIds = ids,
-      hapticFeedbackEnabled = feedbackEnabled
+      hapticFeedbackEnabled = null
     )
   }
 }

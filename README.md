@@ -101,6 +101,13 @@ One API works on both: call `impact('heavy')`, `notification('success')` or `pla
 - 🔊 **Audio events** (iOS): synthesized tones and your own sound files, in sync with the haptics
 - 📄 **AHAP**: play AHAP JSON or `.ahap` files, and convert between AHAP and patterns (`buildAHAP` / `parseAHAP`), so AHAP files play on Android too
 
+### Presets, compiled patterns and real-time control
+
+- 🎁 **21 presets**: `tap`, `doubleTap`, `heartbeat`, `success`, `error`, `rumble`, `hammer`, `bounce`, `explosion` and more, one call each (`playPreset`), compiled on first use
+- ⚡ **Compiled patterns**: `compilePattern` builds a pattern natively once; every replay skips normalization, the bridge copy and the native conversion
+- 🎚️ **Real-time haptics**: `createRealtimeHaptic()` plays a continuous vibration you steer with `set(intensity, sharpness)` from a gesture or slider
+- 📴 **On / off fallback**: `playPattern(pattern, { fallback: true })` plays patterns as pulses on Android vibrators without amplitude control
+
 ### Advanced players
 
 - ⏯️ `start`, `stop`, `pause`, `resume`, `seek` and `cancel`, each at a chosen time
@@ -135,8 +142,11 @@ One API works on both: call `impact('heavy')`, `notification('success')` or `pla
 | `selection()` | ✅ | ✅ | iOS: UISelectionFeedbackGenerator. Android: tick primitive, `EFFECT_TICK` or a short pulse. |
 | `prepareImpact` / `prepareNotification` / `prepareSelection` | ✅ | ➖ | Warms the cached generator. Android needs no warm-up (resolves). |
 | `isSupported()` | ✅ | ✅ | Core Haptics (iOS); a vibrator with amplitude control (Android). |
-| `getCapabilities()` | ✅ | ✅ | See [`HapticCapabilities`](#hapticcapabilities). Web: all `false`. |
-| `playPattern(pattern)` | ✅ | ✅ | iOS: Core Haptics. Android: a 10 ms-sampled amplitude waveform (intensity only, no sharpness or audio). |
+| `getCapabilities()` | ✅ | ✅ | See [`HapticCapabilities`](#hapticcapabilities). Web: all `false`. iPad: `supportsHaptics` and `supportsFeedback` are `false` (no Taptic Engine). |
+| `playPattern(pattern, options?)` | ✅ | ✅ | iOS: Core Haptics. Android: a 10 ms-sampled amplitude waveform (intensity only, no sharpness or audio); with `fallback: true`, on / off pulses on vibrators without amplitude control. |
+| `compilePattern` / `compileAHAP` | ✅ | ✅ | iOS: Core Haptics patterns and reusable players, built once. Android: one prebuilt `VibrationEffect`. |
+| `playPreset` / `preloadPresets` | ✅ | ✅ | Compiled patterns. Android: no sharpness; on / off pulses without amplitude control. Resolves `false` without haptics (iPad). |
+| `createRealtimeHaptic()` | ✅ | ✅ | iOS: looping continuous event with intensity + sharpness controls. Android: looping waveform, intensity only, re-issued at most once per frame. |
 | Audio events (`audioContinuous`, `audioCustom`) | ✅ | ➖ | iOS only; skipped on Android. Needs `setEngineOptions({ playsHapticsOnly: false })`. |
 | Curves (`intensity`) | ✅ | ✅ | |
 | Curves (`sharpness`, attack / decay / release, audio) | ✅ | ➖ | Ignored on Android. |
@@ -149,10 +159,10 @@ One API works on both: call `impact('heavy')`, `notification('success')` or `pla
 | `addEngineListener` | ✅ | ➖ | `stopped` (with reason) and `reset`. Never fires on Android. |
 | `vibrate(ms, amplitude?)` | 🔁 | ✅ | Android: `createOneShot`. iOS: a continuous event. |
 | `playWaveform(timings, amplitudes?, repeat?)` | 🔁 | ✅ | Android: `createWaveform`. iOS: continuous events (repeat loops on a player). |
-| `playPredefined(effect)` | 🔁 | ✅ | Android: `createPredefined` (API 29+). iOS: the closest UIKit impact. |
+| `playPredefined(effect)` | 🔁 | ✅ | Android: `createPredefined` (API 29+). iOS: the closest UIKit impact (resolves `false` without a Taptic Engine). |
 | `playPrimitives(steps)` | 🔁 | ✅ | Android: `startComposition` (API 30+; thud, spin, low tick 31+; delay types 36+). iOS: transients and shaped rumbles. |
 | `playEnvelope(envelope)` | 🔁 | ✅ | Android 16+: envelope builders; older: sampled waveform. iOS: a continuous event with curves. |
-| `performHapticFeedback(constant)` | 🔁 | ✅ | Android: `View.performHapticFeedback` on the current activity. iOS: the closest UIKit feedback. |
+| `performHapticFeedback(constant)` | 🔁 | ✅ | Android: `View.performHapticFeedback` on the current activity. iOS: the closest UIKit feedback (resolves `false` without a Taptic Engine). |
 | VibrationAttributes usage, vibrator ids | ➖ | ✅ | Usage: API 33+ (AudioAttributes on 26-32). Vibrator ids: API 31+. |
 | `cancel()` / `stop()` | ✅ | ✅ | |
 | Web | ➖ | ➖ | Every call resolves without effect. |
@@ -177,7 +187,7 @@ yarn add munim-haptics react-native-nitro-modules
 npx expo install munim-haptics react-native-nitro-modules
 ```
 
-> **Note**: This library requires Expo SDK 50+ and works with both managed and bare workflows. To support Nitro modules, you need React Native version v0.78.0 or higher (`react-native-nitro-modules` >= 0.36.5).
+> **Note**: Works with Expo (SDK 50+, tested on SDK 58) in development builds and with bare React Native (0.78+, tested on 0.88), New Architecture. It needs `react-native-nitro-modules` 0.36.5 or newer (tested on 0.37.2).
 >
 > **Important**: This package requires a native development build in Expo. It does not work in Expo Go. After installing, run `npx expo run:ios`, `npx expo run:android`, or create a development build with EAS.
 
@@ -185,7 +195,7 @@ npx expo install munim-haptics react-native-nitro-modules
 
 Nothing to add: Core Haptics and UIKit feedback need no Info.plist keys. Run `pod install` (bare apps) or rebuild (Expo).
 
-Haptics only play on an iPhone with a Taptic Engine (iPhone 8 and later). The Simulator, iPads and Macs report `supportsHaptics: false`; feedback calls resolve without effect there.
+Haptics only play on an iPhone with a Taptic Engine (iPhone 8 and later). The Simulator, iPads, iPod touch and Macs have none: they report `supportsHaptics: false` and `supportsFeedback: false`, `impact` / `notification` / `selection` resolve without effect, and the calls that report whether something played (`playPreset`, `playPredefined`, `performHapticFeedback`, `playPrimitives`) resolve `false`.
 
 ### Android Setup
 
@@ -250,6 +260,37 @@ if (isSupported()) {
 } else {
   await impact('heavy')
 }
+```
+
+### Presets
+
+```typescript
+import { playPreset, preloadPresets, presetNames } from 'munim-haptics'
+
+preloadPresets(['success', 'error']) // optional: compile ahead of the first tap
+const played = await playPreset('success') // false on devices without haptics (iPad)
+console.log(presetNames) // ['tap', 'doubleTap', 'tripleTap', 'click', 'thud', ...]
+```
+
+### Play the same pattern often: compile it once
+
+```typescript
+import { compilePattern } from 'munim-haptics'
+
+const swipe = compilePattern(buildUp) // native objects built once
+await swipe.play() // every replay: no conversion, no bridge copy
+swipe.release() // when you no longer need it (or let GC do it)
+```
+
+### Real-time haptics from a gesture
+
+```typescript
+import { createRealtimeHaptic } from 'munim-haptics'
+
+const rt = createRealtimeHaptic()
+onGestureStart(() => rt.start(0.3, 0.5))
+onGestureMove(({ force, x }) => rt.set(force, x)) // call it every frame
+onGestureEnd(() => rt.stop())
 ```
 
 ### A player you control
@@ -341,11 +382,67 @@ Plays a [`HapticPattern`](#hapticpattern), replacing any pattern still playing. 
 
 **Returns:** Promise<void>
 
+#### `playPattern(pattern, options?)` options
+
+- `fallback?` (boolean, default `false`): on Android vibrators without amplitude control (where `isSupported()` is `false`), play the pattern as on / off pulses (continuous events at 60% intensity or more vibrate; taps are full-strength pulses) instead of nothing. No effect on iOS.
+
 #### `stop()`
 
 Stops the pattern that is playing, if any.
 
 **Returns:** Promise<void>
+
+#### `compilePattern(pattern, options?)`
+
+Builds the pattern into the platform's own objects once and returns a `CompiledHapticPattern`: iOS keeps the Core Haptics pattern(s) and their players (rebuilt automatically after a haptic-server reset); Android keeps one `VibrationEffect`. `play()` then costs only the start call. Takes the same `fallback` option as `playPattern`. Returns a no-op pattern on web, on devices without haptics, and for patterns with no playable events.
+
+| Member | Description |
+| --- | --- |
+| `duration` | Seconds. |
+| `play()` | Plays it, replacing any pattern still playing. Resolves once started. |
+| `stop()` | Stops it if it is playing (Android: cancels the vibration). |
+| `release()` | Frees the native objects now (otherwise when garbage-collected). |
+
+**Returns:** CompiledHapticPattern
+
+#### `compileAHAP(ahap, options?)`
+
+`compilePattern` for an AHAP document (string or object). iOS: native, audio included. Android: the parsed pattern.
+
+**Returns:** CompiledHapticPattern
+
+### Presets
+
+#### `playPreset(name)`
+
+Plays one of the built-in patterns: `tap`, `doubleTap`, `tripleTap`, `click`, `thud`, `knock`, `heartbeat`, `success`, `warning`, `error`, `buzz`, `rumble`, `rampUp`, `rampDown`, `pulse`, `drumroll`, `hammer`, `bounce`, `zipper`, `wobble`, `explosion`. Each is compiled the first time it plays and replayed from the native copy after that. On Android sharpness has no effect, and vibrators without amplitude control play presets as on / off pulses.
+
+**Returns:** Promise<boolean> (whether something played: `false` on web and on devices without haptics, such as iPads)
+
+#### `preloadPresets(names?)`
+
+Compiles presets (all by default) ahead of time so their first play is as fast as the rest.
+
+#### `presetNames`, `getPresetPattern(name)`
+
+Every preset name, and a copy of the pattern behind one (to inspect, tweak, or `buildAHAP` it).
+
+### Real-time
+
+#### `createRealtimeHaptic()`
+
+A `RealtimeHaptic`: a continuous vibration you steer while it plays.
+
+| Member | Description |
+| --- | --- |
+| `start(intensity?, sharpness?)` | Starts it (0..1 each, defaults 1 and 0.5). Does nothing if already playing. |
+| `set(intensity, sharpness?)` | Changes intensity and (iOS) sharpness immediately. Call it as often as you like: on Android the waveform is re-issued at most once per frame (16 ms) with the latest value, and not at all when the amplitude would not change. |
+| `stop()` | Stops it and frees its player. |
+| `isActive` | Whether it is playing. |
+
+iOS: one looping 30 s continuous event on a `CHHapticAdvancedPatternPlayer`, driven by the intensity and sharpness dynamic parameters. Android: a looping waveform whose amplitude follows `set` (no sharpness). Does nothing on devices without haptics.
+
+**Returns:** RealtimeHaptic
 
 #### `normalizePattern(pattern)`
 
@@ -422,6 +519,7 @@ A player for an `.ahap` file, found like `playAHAPFile`. On iOS, give audio file
 | `sendParameters(parameters, atTime?)` | Dynamic parameters while playing: `{ intensity: 0.5, sharpness: -0.2 }` or `[{ parameter, value }]`. Intensity is a 0..1 multiplier; the others are -1..1 offsets. Android: intensity only. |
 | `scheduleParameterCurve(curve, atTime?)` | A curve that starts at `atTime`. Android: intensity curves only. |
 | `onComplete(listener)` | Called with `undefined` when the player finishes or stops (not on each loop), or with an error message. |
+| `release()` | Stops it and frees the native players now (otherwise when garbage-collected). Android also drops anything scheduled. |
 
 On iOS, a pattern whose curves would otherwise shape its taps plays on two Core Haptics players started together (curves on the continuous events only), padded to the same length so they loop in step.
 
@@ -534,6 +632,7 @@ Default `usage` / `vibratorIds` for the Android calls above. The default usage i
 | `platform`, `osVersion` | `'ios'`, iOS version | `'android'`, release |
 | `apiLevel` | `0` | `Build.VERSION.SDK_INT` |
 | `supportsHaptics` | Core Haptics | has a vibrator |
+| `supportsFeedback` | `impact` / `notification` / `selection` are felt: the device has a Taptic Engine (`false` on iPad, iPod touch, Mac, Simulator) | has a vibrator |
 | `supportsAudio` | Core Haptics audio | `false` |
 | `supportsPatterns` | Core Haptics | vibrator with amplitude control |
 | `hasVibrator`, `hasAmplitudeControl` | = `supportsHaptics` | `Vibrator.hasVibrator()` / `hasAmplitudeControl()` |
@@ -543,6 +642,7 @@ Default `usage` / `vibratorIds` for the Android calls above. The default usage i
 | `supportsEnvelopeEffects`, `envelope*` | `false` | `areEnvelopeEffectsSupported()` and `getEnvelopeEffectInfo()` limits (API 36+) |
 | `resonantFrequency`, `qFactor` | – | API 34+, when reported |
 | `minFrequencyHz`, `maxFrequencyHz`, `maxOutputAccelerationGs` | – | `getFrequencyProfile()` (API 36+) |
+| `frequencyResponse` | `[]` | `[{ frequencyHz, outputAccelerationGs }]` from `VibratorFrequencyProfile.getFrequenciesOutputAcceleration()` (API 36+) |
 | `vibratorIds` | `[]` | `VibratorManager.getVibratorIds()` (API 31+) |
 | `hapticFeedbackEnabled` | – | the system touch-feedback setting |
 
@@ -777,11 +877,25 @@ subscription.remove()
 We welcome contributions! Open an issue or a pull request on [GitHub](https://github.com/munimtechnologies/munim-haptics).
 
 ```bash
-npm install
-npm run codegen   # nitrogen + TypeScript build, after changing src/specs
-npm test          # Jest: pattern normalization, AHAP, iOS stand-ins
+npm install                  # the library and the example app (npm workspace)
+npm run codegen              # nitrogen, after changing src/specs (commit the output)
+npm run typecheck            # library; `npm run typecheck:example` for the example app
+npm run lint                 # ESLint
+npm test                     # Jest: pattern normalization, AHAP, presets, iOS stand-ins
+npx bob build                # lib/
 scripts/typecheck-swift.sh   # Swift + Nitro bridge typecheck against the iOS SDK (macOS)
 scripts/compile-kotlin.sh    # Kotlin compile check against android.jar (needs kotlinc)
+```
+
+### Example app
+
+`example/` is an Expo app with a screen for every API (capabilities, feedback, presets, compiled patterns, players, a real-time touch pad, Android effects, the Core Haptics engine and a benchmark). Haptics need a real device:
+
+```bash
+npm install
+cd example
+npx expo prebuild          # generates example/ios and example/android
+npx expo run:ios --device  # or: npx expo run:android --device
 ```
 
 ## 📄 License
