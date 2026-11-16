@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "Munim Haptics Example",
+    "slug": "munim-haptics-example",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.munimtech.munimhapticsexample",
+      "appleTeamId": "6T5J6U2UVT"
+    },
+    "android": {
+      "package": "com.sheehanmunim.munimhapticsexample"
+    },
+    "plugins": ["munim-haptics"]
+  }
+}
