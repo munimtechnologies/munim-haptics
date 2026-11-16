@@ -12,6 +12,8 @@ module.exports = {
           composite: false,
           noEmit: true,
           verbatimModuleSyntax: false,
+          // TypeScript 6 no longer loads every @types package by default.
+          types: ['jest'],
         },
       },
     ],
