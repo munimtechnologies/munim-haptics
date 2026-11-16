@@ -35,7 +35,8 @@ final class HybridCompiledHapticPattern: HybridCompiledHapticPatternSpec, @unche
         }
         patterns = built
         patternDuration = built.map { $0.duration }.max() ?? 0
-        generation = engine.generation
+        // Not `engine`: self isn't fully initialized yet.
+        generation = MunimHapticsEngine.shared.generation
         super.init()
     }
 
