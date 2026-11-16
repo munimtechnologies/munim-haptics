@@ -70,6 +70,8 @@ namespace margelo::nitro::munimhaptics {
     std::shared_ptr<Promise<std::string>> readTextFile(const std::string& path) override;
     std::shared_ptr<HybridHapticPlayerSpec> createPlayer(const NativeHapticPattern& pattern) override;
     std::shared_ptr<HybridHapticPlayerSpec> createPlayerFromAHAP(const std::string& ahap) override;
+    std::shared_ptr<HybridCompiledHapticPatternSpec> compilePattern(const NativeHapticPattern& pattern) override;
+    std::shared_ptr<HybridCompiledHapticPatternSpec> compileAHAP(const std::string& ahap) override;
     std::shared_ptr<Promise<void>> startEngine() override;
     std::shared_ptr<Promise<void>> stopEngine() override;
     void setEngineOptions(const HapticEngineOptions& options) override;

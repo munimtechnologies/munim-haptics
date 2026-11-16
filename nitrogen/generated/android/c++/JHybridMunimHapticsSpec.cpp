@@ -19,8 +19,12 @@ namespace margelo::nitro::munimhaptics { struct AndroidEffectInfo; }
 namespace margelo::nitro::munimhaptics { enum class AndroidPredefinedEffect; }
 // Forward declaration of `AndroidEffectSupport` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { enum class AndroidEffectSupport; }
+// Forward declaration of `FrequencyResponsePoint` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct FrequencyResponsePoint; }
 // Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
+// Forward declaration of `HybridCompiledHapticPatternSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridCompiledHapticPatternSpec; }
 // Forward declaration of `HapticEngineState` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticEngineState; }
 // Forward declaration of `NativeHapticPattern` to properly resolve imports.
@@ -82,9 +86,13 @@ namespace margelo::nitro::munimhaptics { enum class AndroidHapticFeedback; }
 #include "AndroidEffectSupport.hpp"
 #include "JAndroidEffectSupport.hpp"
 #include <optional>
+#include "FrequencyResponsePoint.hpp"
+#include "JFrequencyResponsePoint.hpp"
 #include <memory>
 #include "HybridHapticPlayerSpec.hpp"
 #include "JHybridHapticPlayerSpec.hpp"
+#include "HybridCompiledHapticPatternSpec.hpp"
+#include "JHybridCompiledHapticPatternSpec.hpp"
 #include "HapticEngineState.hpp"
 #include "JHapticEngineState.hpp"
 #include "NativeHapticPattern.hpp"
@@ -364,6 +372,16 @@ namespace margelo::nitro::munimhaptics {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JHybridHapticPlayerSpec::JavaPart>(jni::alias_ref<jni::JString> /* ahap */)>("createPlayerFromAHAP");
     auto __result = method(_javaPart, jni::make_jstring(ahap));
     return __result->getJHybridHapticPlayerSpec();
+  }
+  std::shared_ptr<HybridCompiledHapticPatternSpec> JHybridMunimHapticsSpec::compilePattern(const NativeHapticPattern& pattern) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JHybridCompiledHapticPatternSpec::JavaPart>(jni::alias_ref<JNativeHapticPattern> /* pattern */)>("compilePattern");
+    auto __result = method(_javaPart, JNativeHapticPattern::fromCpp(pattern));
+    return __result->getJHybridCompiledHapticPatternSpec();
+  }
+  std::shared_ptr<HybridCompiledHapticPatternSpec> JHybridMunimHapticsSpec::compileAHAP(const std::string& ahap) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JHybridCompiledHapticPatternSpec::JavaPart>(jni::alias_ref<jni::JString> /* ahap */)>("compileAHAP");
+    auto __result = method(_javaPart, jni::make_jstring(ahap));
+    return __result->getJHybridCompiledHapticPatternSpec();
   }
   std::shared_ptr<Promise<void>> JHybridMunimHapticsSpec::startEngine() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("startEngine");

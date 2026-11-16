@@ -17,6 +17,7 @@
 
 #include "JHybridHapticPlayerSpec.hpp"
 #include "JFunc_void_HapticPlayerCompletion.hpp"
+#include "JHybridCompiledHapticPatternSpec.hpp"
 #include "JHybridMunimHapticsSpec.hpp"
 #include "JFunc_void_HapticEngineEvent.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
@@ -45,6 +46,7 @@ void registerAllNatives() {
   // Register native JNI methods
   margelo::nitro::munimhaptics::JHybridHapticPlayerSpec::CxxPart::registerNatives();
   margelo::nitro::munimhaptics::JFunc_void_HapticPlayerCompletion_cxx::registerNatives();
+  margelo::nitro::munimhaptics::JHybridCompiledHapticPatternSpec::CxxPart::registerNatives();
   margelo::nitro::munimhaptics::JHybridMunimHapticsSpec::CxxPart::registerNatives();
   margelo::nitro::munimhaptics::JFunc_void_HapticEngineEvent_cxx::registerNatives();
 

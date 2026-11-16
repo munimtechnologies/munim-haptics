@@ -26,6 +26,8 @@ namespace margelo::nitro::munimhaptics { struct AndroidPrimitiveInfo; }
 namespace margelo::nitro::munimhaptics { enum class AndroidPrimitive; }
 // Forward declaration of `AndroidVibrationUsage` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { enum class AndroidVibrationUsage; }
+// Forward declaration of `FrequencyResponsePoint` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct FrequencyResponsePoint; }
 // Forward declaration of `HapticCapabilities` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticCapabilities; }
 // Forward declaration of `HapticCurveParameter` to properly resolve imports.
@@ -50,6 +52,8 @@ namespace margelo::nitro::munimhaptics { enum class HapticEngineStopReason; }
 namespace margelo::nitro::munimhaptics { enum class HapticEventType; }
 // Forward declaration of `HapticPlayerCompletion` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticPlayerCompletion; }
+// Forward declaration of `HybridCompiledHapticPatternSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridCompiledHapticPatternSpec; }
 // Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
 // Forward declaration of `HybridMunimHapticsSpec` to properly resolve imports.
@@ -81,6 +85,7 @@ namespace margelo::nitro::munimhaptics { enum class NotificationFeedbackType; }
 #include "AndroidPrimitiveDelayType.hpp"
 #include "AndroidPrimitiveInfo.hpp"
 #include "AndroidVibrationUsage.hpp"
+#include "FrequencyResponsePoint.hpp"
 #include "HapticCapabilities.hpp"
 #include "HapticCurve.hpp"
 #include "HapticCurveParameter.hpp"
@@ -93,6 +98,7 @@ namespace margelo::nitro::munimhaptics { enum class NotificationFeedbackType; }
 #include "HapticEngineStopReason.hpp"
 #include "HapticEventType.hpp"
 #include "HapticPlayerCompletion.hpp"
+#include "HybridCompiledHapticPatternSpec.hpp"
 #include "HybridHapticPlayerSpec.hpp"
 #include "HybridMunimHapticsSpec.hpp"
 #include "ImpactStyle.hpp"
@@ -122,6 +128,8 @@ namespace margelo::nitro::munimhaptics { enum class NotificationFeedbackType; }
 #include <NitroModules/DateToChronoDate.hpp>
 
 // Forward declarations of Swift defined types
+// Forward declaration of `HybridCompiledHapticPatternSpec_cxx` to properly resolve imports.
+namespace MunimHaptics { class HybridCompiledHapticPatternSpec_cxx; }
 // Forward declaration of `HybridHapticPlayerSpec_cxx` to properly resolve imports.
 namespace MunimHaptics { class HybridHapticPlayerSpec_cxx; }
 // Forward declaration of `HybridMunimHapticsSpec_cxx` to properly resolve imports.

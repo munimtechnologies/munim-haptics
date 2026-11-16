@@ -96,6 +96,14 @@ abstract class HybridMunimHapticsSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
+  abstract fun compilePattern(pattern: NativeHapticPattern): HybridCompiledHapticPatternSpec
+  
+  @DoNotStrip
+  @Keep
+  abstract fun compileAHAP(ahap: String): HybridCompiledHapticPatternSpec
+  
+  @DoNotStrip
+  @Keep
   abstract fun startEngine(): Promise<Unit>
   
   @DoNotStrip

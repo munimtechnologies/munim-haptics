@@ -8,6 +8,7 @@
 #include "MunimHaptics-Swift-Cxx-Bridge.hpp"
 
 // Include C++ implementation defined types
+#include "HybridCompiledHapticPatternSpecSwift.hpp"
 #include "HybridHapticPlayerSpecSwift.hpp"
 #include "HybridMunimHapticsSpecSwift.hpp"
 #include "MunimHaptics-Swift-Cxx-Umbrella.hpp"
@@ -52,6 +53,22 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
     }
     #endif
     MunimHaptics::HybridHapticPlayerSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
+    return swiftPart.toUnsafe();
+  }
+  
+  // pragma MARK: std::shared_ptr<HybridCompiledHapticPatternSpec>
+  std::shared_ptr<HybridCompiledHapticPatternSpec> create_std__shared_ptr_HybridCompiledHapticPatternSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
+    MunimHaptics::HybridCompiledHapticPatternSpec_cxx swiftPart = MunimHaptics::HybridCompiledHapticPatternSpec_cxx::fromUnsafe(swiftUnsafePointer);
+    return std::make_shared<margelo::nitro::munimhaptics::HybridCompiledHapticPatternSpecSwift>(swiftPart);
+  }
+  void* NON_NULL get_std__shared_ptr_HybridCompiledHapticPatternSpec_(std__shared_ptr_HybridCompiledHapticPatternSpec_ cppType) {
+    std::shared_ptr<margelo::nitro::munimhaptics::HybridCompiledHapticPatternSpecSwift> swiftWrapper = std::dynamic_pointer_cast<margelo::nitro::munimhaptics::HybridCompiledHapticPatternSpecSwift>(cppType);
+    #ifdef NITRO_DEBUG
+    if (swiftWrapper == nullptr) [[unlikely]] {
+      throw std::runtime_error("Class \"HybridCompiledHapticPatternSpec\" is not implemented in Swift!");
+    }
+    #endif
+    MunimHaptics::HybridCompiledHapticPatternSpec_cxx& swiftPart = swiftWrapper->getSwiftPart();
     return swiftPart.toUnsafe();
   }
   

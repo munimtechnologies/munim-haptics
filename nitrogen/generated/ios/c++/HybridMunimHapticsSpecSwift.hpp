@@ -36,12 +36,16 @@ namespace margelo::nitro::munimhaptics { struct AndroidEffectInfo; }
 namespace margelo::nitro::munimhaptics { enum class AndroidPredefinedEffect; }
 // Forward declaration of `AndroidEffectSupport` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { enum class AndroidEffectSupport; }
+// Forward declaration of `FrequencyResponsePoint` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct FrequencyResponsePoint; }
 // Forward declaration of `ImpactStyle` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { enum class ImpactStyle; }
 // Forward declaration of `NotificationFeedbackType` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { enum class NotificationFeedbackType; }
 // Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
+// Forward declaration of `HybridCompiledHapticPatternSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridCompiledHapticPatternSpec; }
 // Forward declaration of `HapticEngineOptions` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticEngineOptions; }
 // Forward declaration of `HapticEngineState` to properly resolve imports.
@@ -85,10 +89,12 @@ namespace margelo::nitro::munimhaptics { enum class AndroidHapticFeedback; }
 #include "AndroidEffectInfo.hpp"
 #include "AndroidPredefinedEffect.hpp"
 #include "AndroidEffectSupport.hpp"
+#include "FrequencyResponsePoint.hpp"
 #include "ImpactStyle.hpp"
 #include "NotificationFeedbackType.hpp"
 #include <memory>
 #include "HybridHapticPlayerSpec.hpp"
+#include "HybridCompiledHapticPatternSpec.hpp"
 #include "HapticEngineOptions.hpp"
 #include "HapticEngineState.hpp"
 #include "HapticEngineEvent.hpp"
@@ -276,6 +282,22 @@ namespace margelo::nitro::munimhaptics {
     }
     inline std::shared_ptr<HybridHapticPlayerSpec> createPlayerFromAHAP(const std::string& ahap) override {
       auto __result = _swiftPart.createPlayerFromAHAP(ahap);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<HybridCompiledHapticPatternSpec> compilePattern(const NativeHapticPattern& pattern) override {
+      auto __result = _swiftPart.compilePattern(std::forward<decltype(pattern)>(pattern));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<HybridCompiledHapticPatternSpec> compileAHAP(const std::string& ahap) override {
+      auto __result = _swiftPart.compileAHAP(ahap);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

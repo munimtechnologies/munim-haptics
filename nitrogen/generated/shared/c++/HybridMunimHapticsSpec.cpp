@@ -30,6 +30,8 @@ namespace margelo::nitro::munimhaptics {
       prototype.registerHybridMethod("readTextFile", &HybridMunimHapticsSpec::readTextFile);
       prototype.registerHybridMethod("createPlayer", &HybridMunimHapticsSpec::createPlayer);
       prototype.registerHybridMethod("createPlayerFromAHAP", &HybridMunimHapticsSpec::createPlayerFromAHAP);
+      prototype.registerHybridMethod("compilePattern", &HybridMunimHapticsSpec::compilePattern);
+      prototype.registerHybridMethod("compileAHAP", &HybridMunimHapticsSpec::compileAHAP);
       prototype.registerHybridMethod("startEngine", &HybridMunimHapticsSpec::startEngine);
       prototype.registerHybridMethod("stopEngine", &HybridMunimHapticsSpec::stopEngine);
       prototype.registerHybridMethod("setEngineOptions", &HybridMunimHapticsSpec::setEngineOptions);

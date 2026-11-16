@@ -20,6 +20,8 @@ namespace margelo::nitro::munimhaptics { enum class AndroidPrimitiveDelayType; }
 namespace margelo::nitro::munimhaptics { struct AndroidPrimitiveInfo; }
 // Forward declaration of `AndroidPrimitive` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { enum class AndroidPrimitive; }
+// Forward declaration of `FrequencyResponsePoint` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { struct FrequencyResponsePoint; }
 // Forward declaration of `HapticCapabilities` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticCapabilities; }
 // Forward declaration of `HapticCurveParameter` to properly resolve imports.
@@ -42,6 +44,8 @@ namespace margelo::nitro::munimhaptics { enum class HapticEngineStopReason; }
 namespace margelo::nitro::munimhaptics { enum class HapticEventType; }
 // Forward declaration of `HapticPlayerCompletion` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticPlayerCompletion; }
+// Forward declaration of `HybridCompiledHapticPatternSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridCompiledHapticPatternSpec; }
 // Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
 // Forward declaration of `HybridMunimHapticsSpec` to properly resolve imports.
@@ -54,6 +58,8 @@ namespace margelo::nitro::munimhaptics { struct NativeHapticEvent; }
 namespace margelo::nitro::munimhaptics { struct NativePrimitiveStep; }
 
 // Forward declarations of Swift defined types
+// Forward declaration of `HybridCompiledHapticPatternSpec_cxx` to properly resolve imports.
+namespace MunimHaptics { class HybridCompiledHapticPatternSpec_cxx; }
 // Forward declaration of `HybridHapticPlayerSpec_cxx` to properly resolve imports.
 namespace MunimHaptics { class HybridHapticPlayerSpec_cxx; }
 // Forward declaration of `HybridMunimHapticsSpec_cxx` to properly resolve imports.
@@ -66,6 +72,7 @@ namespace MunimHaptics { class HybridMunimHapticsSpec_cxx; }
 #include "AndroidPrimitive.hpp"
 #include "AndroidPrimitiveDelayType.hpp"
 #include "AndroidPrimitiveInfo.hpp"
+#include "FrequencyResponsePoint.hpp"
 #include "HapticCapabilities.hpp"
 #include "HapticCurve.hpp"
 #include "HapticCurveParameter.hpp"
@@ -77,6 +84,7 @@ namespace MunimHaptics { class HybridMunimHapticsSpec_cxx; }
 #include "HapticEngineStopReason.hpp"
 #include "HapticEventType.hpp"
 #include "HapticPlayerCompletion.hpp"
+#include "HybridCompiledHapticPatternSpec.hpp"
 #include "HybridHapticPlayerSpec.hpp"
 #include "HybridMunimHapticsSpec.hpp"
 #include "NativeEnvelopePoint.hpp"
@@ -228,6 +236,18 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
     return Result<void>::withError(error);
   }
   
+  // pragma MARK: std::shared_ptr<HybridCompiledHapticPatternSpec>
+  /**
+   * Specialized version of `std::shared_ptr<HybridCompiledHapticPatternSpec>`.
+   */
+  using std__shared_ptr_HybridCompiledHapticPatternSpec_ = std::shared_ptr<HybridCompiledHapticPatternSpec>;
+  std::shared_ptr<HybridCompiledHapticPatternSpec> create_std__shared_ptr_HybridCompiledHapticPatternSpec_(void* NON_NULL swiftUnsafePointer) noexcept;
+  void* NON_NULL get_std__shared_ptr_HybridCompiledHapticPatternSpec_(std__shared_ptr_HybridCompiledHapticPatternSpec_ cppType);
+  
+  // pragma MARK: std::weak_ptr<HybridCompiledHapticPatternSpec>
+  using std__weak_ptr_HybridCompiledHapticPatternSpec_ = std::weak_ptr<HybridCompiledHapticPatternSpec>;
+  inline std__weak_ptr_HybridCompiledHapticPatternSpec_ weakify_std__shared_ptr_HybridCompiledHapticPatternSpec_(const std::shared_ptr<HybridCompiledHapticPatternSpec>& strong) noexcept { return strong; }
+  
   // pragma MARK: std::optional<double>
   /**
    * Specialized version of `std::optional<double>`.
@@ -313,6 +333,17 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
   using std__vector_AndroidEffectInfo_ = std::vector<AndroidEffectInfo>;
   inline std::vector<AndroidEffectInfo> create_std__vector_AndroidEffectInfo_(size_t size) noexcept {
     std::vector<AndroidEffectInfo> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<FrequencyResponsePoint>
+  /**
+   * Specialized version of `std::vector<FrequencyResponsePoint>`.
+   */
+  using std__vector_FrequencyResponsePoint_ = std::vector<FrequencyResponsePoint>;
+  inline std::vector<FrequencyResponsePoint> create_std__vector_FrequencyResponsePoint_(size_t size) noexcept {
+    std::vector<FrequencyResponsePoint> vector;
     vector.reserve(size);
     return vector;
   }
@@ -486,6 +517,15 @@ namespace margelo::nitro::munimhaptics::bridge::swift {
   }
   inline Result_std__shared_ptr_HybridHapticPlayerSpec__ create_Result_std__shared_ptr_HybridHapticPlayerSpec__(const std::exception_ptr& error) noexcept {
     return Result<std::shared_ptr<HybridHapticPlayerSpec>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<HybridCompiledHapticPatternSpec>>
+  using Result_std__shared_ptr_HybridCompiledHapticPatternSpec__ = Result<std::shared_ptr<HybridCompiledHapticPatternSpec>>;
+  inline Result_std__shared_ptr_HybridCompiledHapticPatternSpec__ create_Result_std__shared_ptr_HybridCompiledHapticPatternSpec__(const std::shared_ptr<HybridCompiledHapticPatternSpec>& value) noexcept {
+    return Result<std::shared_ptr<HybridCompiledHapticPatternSpec>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_HybridCompiledHapticPatternSpec__ create_Result_std__shared_ptr_HybridCompiledHapticPatternSpec__(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<HybridCompiledHapticPatternSpec>>::withError(error);
   }
   
   // pragma MARK: Result<HapticEngineState>

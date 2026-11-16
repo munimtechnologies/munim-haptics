@@ -29,6 +29,8 @@ public protocol HybridMunimHapticsSpec_protocol: HybridObject {
   func readTextFile(path: String) throws -> Promise<String>
   func createPlayer(pattern: NativeHapticPattern) throws -> (any HybridHapticPlayerSpec)
   func createPlayerFromAHAP(ahap: String) throws -> (any HybridHapticPlayerSpec)
+  func compilePattern(pattern: NativeHapticPattern) throws -> (any HybridCompiledHapticPatternSpec)
+  func compileAHAP(ahap: String) throws -> (any HybridCompiledHapticPatternSpec)
   func startEngine() throws -> Promise<Void>
   func stopEngine() throws -> Promise<Void>
   func setEngineOptions(options: HapticEngineOptions) throws -> Void

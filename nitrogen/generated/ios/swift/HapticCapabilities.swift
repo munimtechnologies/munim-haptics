@@ -18,8 +18,8 @@ public extension HapticCapabilities {
   /**
    * Create a new instance of `HapticCapabilities`.
    */
-  init(platform: String, osVersion: String, apiLevel: Double, supportsHaptics: Bool, supportsAudio: Bool, supportsPatterns: Bool, hasVibrator: Bool, hasAmplitudeControl: Bool, hasFrequencyControl: Bool, supportsPrimitives: Bool, primitives: [AndroidPrimitiveInfo], effects: [AndroidEffectInfo], supportsEnvelopeEffects: Bool, envelopeMaxControlPoints: Double?, envelopeMaxDurationMs: Double?, envelopeMinControlPointDurationMs: Double?, envelopeMaxControlPointDurationMs: Double?, resonantFrequency: Double?, qFactor: Double?, minFrequencyHz: Double?, maxFrequencyHz: Double?, maxOutputAccelerationGs: Double?, vibratorIds: [Double], hapticFeedbackEnabled: Bool?) {
-    self.init(std.string(platform), std.string(osVersion), apiLevel, supportsHaptics, supportsAudio, supportsPatterns, hasVibrator, hasAmplitudeControl, hasFrequencyControl, supportsPrimitives, { () -> bridge.std__vector_AndroidPrimitiveInfo_ in
+  init(platform: String, osVersion: String, apiLevel: Double, supportsHaptics: Bool, supportsFeedback: Bool, supportsAudio: Bool, supportsPatterns: Bool, hasVibrator: Bool, hasAmplitudeControl: Bool, hasFrequencyControl: Bool, supportsPrimitives: Bool, primitives: [AndroidPrimitiveInfo], effects: [AndroidEffectInfo], supportsEnvelopeEffects: Bool, envelopeMaxControlPoints: Double?, envelopeMaxDurationMs: Double?, envelopeMinControlPointDurationMs: Double?, envelopeMaxControlPointDurationMs: Double?, resonantFrequency: Double?, qFactor: Double?, minFrequencyHz: Double?, maxFrequencyHz: Double?, maxOutputAccelerationGs: Double?, frequencyResponse: [FrequencyResponsePoint], vibratorIds: [Double], hapticFeedbackEnabled: Bool?) {
+    self.init(std.string(platform), std.string(osVersion), apiLevel, supportsHaptics, supportsFeedback, supportsAudio, supportsPatterns, hasVibrator, hasAmplitudeControl, hasFrequencyControl, supportsPrimitives, { () -> bridge.std__vector_AndroidPrimitiveInfo_ in
       var __vector = bridge.create_std__vector_AndroidPrimitiveInfo_(primitives.count)
       for __item in primitives {
         __vector.push_back(__item)
@@ -85,6 +85,12 @@ public extension HapticCapabilities {
       } else {
         return .init()
       }
+    }(), { () -> bridge.std__vector_FrequencyResponsePoint_ in
+      var __vector = bridge.create_std__vector_FrequencyResponsePoint_(frequencyResponse.count)
+      for __item in frequencyResponse {
+        __vector.push_back(__item)
+      }
+      return __vector
     }(), { () -> bridge.std__vector_double_ in
       var __vector = bridge.create_std__vector_double_(vibratorIds.count)
       for __item in vibratorIds {
@@ -118,6 +124,11 @@ public extension HapticCapabilities {
   @inline(__always)
   var supportsHaptics: Bool {
     return self.__supportsHaptics
+  }
+  
+  @inline(__always)
+  var supportsFeedback: Bool {
+    return self.__supportsFeedback
   }
   
   @inline(__always)
@@ -271,6 +282,11 @@ public extension HapticCapabilities {
         return nil
       }
     }()
+  }
+  
+  @inline(__always)
+  var frequencyResponse: [FrequencyResponsePoint] {
+    return self.__frequencyResponse.map({ __item in __item })
   }
   
   @inline(__always)

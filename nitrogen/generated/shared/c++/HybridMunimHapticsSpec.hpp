@@ -23,6 +23,8 @@ namespace margelo::nitro::munimhaptics { enum class ImpactStyle; }
 namespace margelo::nitro::munimhaptics { enum class NotificationFeedbackType; }
 // Forward declaration of `HybridHapticPlayerSpec` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { class HybridHapticPlayerSpec; }
+// Forward declaration of `HybridCompiledHapticPatternSpec` to properly resolve imports.
+namespace margelo::nitro::munimhaptics { class HybridCompiledHapticPatternSpec; }
 // Forward declaration of `HapticEngineOptions` to properly resolve imports.
 namespace margelo::nitro::munimhaptics { struct HapticEngineOptions; }
 // Forward declaration of `HapticEngineState` to properly resolve imports.
@@ -48,6 +50,7 @@ namespace margelo::nitro::munimhaptics { enum class AndroidHapticFeedback; }
 #include <string>
 #include <memory>
 #include "HybridHapticPlayerSpec.hpp"
+#include "HybridCompiledHapticPatternSpec.hpp"
 #include "HapticEngineOptions.hpp"
 #include "HapticEngineState.hpp"
 #include "HapticEngineEvent.hpp"
@@ -106,6 +109,8 @@ namespace margelo::nitro::munimhaptics {
       virtual std::shared_ptr<Promise<std::string>> readTextFile(const std::string& path) = 0;
       virtual std::shared_ptr<HybridHapticPlayerSpec> createPlayer(const NativeHapticPattern& pattern) = 0;
       virtual std::shared_ptr<HybridHapticPlayerSpec> createPlayerFromAHAP(const std::string& ahap) = 0;
+      virtual std::shared_ptr<HybridCompiledHapticPatternSpec> compilePattern(const NativeHapticPattern& pattern) = 0;
+      virtual std::shared_ptr<HybridCompiledHapticPatternSpec> compileAHAP(const std::string& ahap) = 0;
       virtual std::shared_ptr<Promise<void>> startEngine() = 0;
       virtual std::shared_ptr<Promise<void>> stopEngine() = 0;
       virtual void setEngineOptions(const HapticEngineOptions& options) = 0;
