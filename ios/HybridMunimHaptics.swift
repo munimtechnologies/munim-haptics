@@ -45,6 +45,10 @@ final class HybridMunimHaptics: HybridMunimHapticsSpec {
             osVersion: UIDevice.current.systemVersion,
             apiLevel: 0,
             supportsHaptics: haptics,
+            // UIKit's feedback generators drive the same Taptic Engine Core
+            // Haptics reports: iPads, iPod touch, Macs and the simulator have
+            // none, and there the generators silently do nothing.
+            supportsFeedback: haptics,
             supportsAudio: engine.supportsAudio,
             supportsPatterns: haptics,
             hasVibrator: haptics,
@@ -63,6 +67,7 @@ final class HybridMunimHaptics: HybridMunimHapticsSpec {
             minFrequencyHz: nil,
             maxFrequencyHz: nil,
             maxOutputAccelerationGs: nil,
+            frequencyResponse: [],
             vibratorIds: [],
             hapticFeedbackEnabled: nil
         )
@@ -129,6 +134,26 @@ final class HybridMunimHaptics: HybridMunimHapticsSpec {
             _ = try engine.runningEngine()
             return try HybridHapticPlayer {
                 [MunimHapticsEngine.BuiltPattern(pattern: try MunimHapticsEngine.pattern(fromAHAP: ahap), takesCurves: true)]
+            }
+        }
+    }
+
+    func compilePattern(pattern: NativeHapticPattern) throws -> (any HybridCompiledHapticPatternSpec) {
+        let engine = self.engine
+        return try engine.queue.sync {
+            _ = try engine.runningEngine()
+            return try HybridCompiledHapticPattern(eventCount: pattern.events.count) {
+                try engine.makePatterns(pattern, alignEnds: false).map { $0.pattern }
+            }
+        }
+    }
+
+    func compileAHAP(ahap: String) throws -> (any HybridCompiledHapticPatternSpec) {
+        let engine = self.engine
+        return try engine.queue.sync {
+            _ = try engine.runningEngine()
+            return try HybridCompiledHapticPattern(eventCount: ahap.utf8.count / 64) {
+                [try MunimHapticsEngine.pattern(fromAHAP: ahap)]
             }
         }
     }

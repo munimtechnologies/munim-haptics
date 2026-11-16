@@ -7,6 +7,7 @@ import type {
   AndroidPrimitiveDelayType,
   AndroidPrimitiveInfo,
   AndroidVibrationUsage,
+  FrequencyResponsePoint,
   HapticCapabilities,
   HapticCurveParameter,
   HapticCurvePoint,
@@ -29,6 +30,7 @@ export type {
   AndroidPrimitiveDelayType,
   AndroidPrimitiveInfo,
   AndroidVibrationUsage,
+  FrequencyResponsePoint,
   HapticCapabilities,
   HapticCurveParameter,
   HapticCurvePoint,
@@ -152,6 +154,52 @@ export type HapticPattern = {
   curves?: HapticCurve[]
 }
 
+export type PlayPatternOptions = {
+  /**
+   * Android devices whose vibrator has no amplitude control (where
+   * `isSupported()` is false) can still play a pattern as on / off pulses:
+   * continuous events at 60% intensity or more vibrate, the rest stay
+   * off, and every tap is a full-strength pulse. Default false (nothing
+   * plays). No effect on iOS, where patterns need Core Haptics.
+   */
+  fallback?: boolean
+}
+
+/**
+ * A pattern built into the platform's own form once (see
+ * `compilePattern`). Replays skip all conversion: the cheapest way to play
+ * the same pattern again and again.
+ */
+export interface CompiledHapticPattern {
+  /** Seconds. */
+  readonly duration: number
+  /** Plays it, replacing any pattern still playing. Resolves once it has started. */
+  play(): Promise<void>
+  /** Stops it if it is playing (Android: cancels the vibration). */
+  stop(): Promise<void>
+  /** Frees the native objects now instead of when garbage-collected. Don't use it afterwards. */
+  release(): void
+}
+
+/**
+ * A vibration you steer while it plays, e.g. from a gesture (see
+ * `createRealtimeHaptic`).
+ */
+export interface RealtimeHaptic {
+  /** Whether it is playing. */
+  readonly isActive: boolean
+  /** Starts it (0..1 each; sharpness is iOS-only). Does nothing if it is already playing. */
+  start(intensity?: number, sharpness?: number): Promise<void>
+  /**
+   * Changes intensity (0..1) and, on iOS, sharpness (0..1) right away.
+   * Call it as often as you like: Android re-issues the vibration at most
+   * once per frame, with the latest value. Ignored while stopped.
+   */
+  set(intensity: number, sharpness?: number): void
+  /** Stops it and frees the native player. */
+  stop(): Promise<void>
+}
+
 // ─── Android options and inputs ────────────────────────────────────────────
 
 export type VibrationOptions = {
@@ -235,4 +283,9 @@ export interface HapticPlayer {
   scheduleParameterCurve(curve: HapticCurve, atTime?: number): Promise<void>
   /** Called when the player finishes (not when it loops), is stopped, or fails (with a message). */
   onComplete(listener: (error?: string) => void): void
+  /**
+   * Stops it and frees the native players now instead of when
+   * garbage-collected. Don't use it afterwards.
+   */
+  release(): void
 }

@@ -280,12 +280,25 @@ final class MunimHapticsEngine: @unchecked Sendable {
         players.removeAll()
     }
 
-    private func startReplacingCurrent(_ patterns: [CHHapticPattern], on engine: CHHapticEngine) throws {
+    /// Stops `subset` if it is the current pattern. Call on `queue`.
+    func stopPlayers(_ subset: [CHHapticPatternPlayer]) {
+        guard players.contains(where: { current in subset.contains { $0 === current } }) else { return }
         stopPlayers()
-        var started: [CHHapticPatternPlayer] = []
+    }
+
+    private func startReplacingCurrent(_ patterns: [CHHapticPattern], on engine: CHHapticEngine) throws {
+        var made: [CHHapticPatternPlayer] = []
         for pattern in patterns {
-            started.append(try engine.makePlayer(with: pattern))
+            made.append(try engine.makePlayer(with: pattern))
         }
+        try startReplacingCurrent(players: made)
+    }
+
+    /// Starts `started` (players on the current engine) in place of whatever
+    /// pattern is playing. Players may be started again: compiled patterns
+    /// reuse theirs. Call on `queue`.
+    func startReplacingCurrent(players started: [CHHapticPatternPlayer]) throws {
+        stopPlayers()
         do {
             for player in started {
                 try player.start(atTime: CHHapticTimeImmediate)

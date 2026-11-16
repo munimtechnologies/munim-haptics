@@ -156,6 +156,13 @@ final class HybridHapticPlayer: HybridHapticPlayerSpec, @unchecked Sendable {
         }
     }
 
+    func dispose() {
+        engine.queue.async {
+            for part in self.parts { try? part.player.cancel() }
+            self.parts = []
+        }
+    }
+
     // MARK: - Internals
 
     private func locked<T>(_ body: () -> T) -> T {

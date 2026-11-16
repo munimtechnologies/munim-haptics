@@ -5,6 +5,7 @@ import com.margelo.nitro.core.Promise
 import com.margelo.nitro.munimhaptics.AndroidHapticFeedback
 import com.margelo.nitro.munimhaptics.AndroidPredefinedEffect
 import com.margelo.nitro.munimhaptics.HapticCapabilities
+import com.margelo.nitro.munimhaptics.HybridCompiledHapticPatternSpec
 import com.margelo.nitro.munimhaptics.HapticEngineEvent
 import com.margelo.nitro.munimhaptics.HapticEngineOptions
 import com.margelo.nitro.munimhaptics.HapticEngineState
@@ -92,6 +93,12 @@ class HybridMunimHaptics : HybridMunimHapticsSpec() {
 
   override fun createPlayerFromAHAP(ahap: String): HybridHapticPlayerSpec =
     throw UnsupportedOperationException("createPlayerFromAHAP is parsed in JavaScript on Android")
+
+  override fun compilePattern(pattern: NativeHapticPattern): HybridCompiledHapticPatternSpec =
+    HybridCompiledHapticPattern(pattern)
+
+  override fun compileAHAP(ahap: String): HybridCompiledHapticPatternSpec =
+    throw UnsupportedOperationException("compileAHAP is parsed in JavaScript on Android")
 
   // ─── Engine (iOS only) ───────────────────────────────────────────────────
 
